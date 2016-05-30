@@ -74,3 +74,49 @@
             (append (apply 'list-of elt)
                     rest)
             (cons elt rest)))))
+
+(nth 0 '(a b c))
+(nthcdr 2 '(a b c))
+
+(defun our-nthcdr (n lst)
+  (if (= n 0)
+      lst
+      (our-nthcdr (1- n) (cdr lst))))
+
+(mapcar #'(lambda (x)
+          (+ 100 x))
+        '(1 2 3 4 5))
+
+;; the last ww is omitted
+(mapcar #'list
+        '(a b c)
+        '(x y z ww))
+
+(maplist #'(lambda (x)
+             x)
+         '(a b c d))
+
+(defun our-copy-tree (tr)
+  (if (atom tr)
+      tr
+      (cons (our-copy-tree (car tr))
+            (our-copy-tree (cdr tr)))))
+
+(subst 'y 'x '(and (intergerp x) (zerop (mod x 2))))
+
+(defun our-subst (new old tree)
+  (if (eql tree old)
+      new
+      (if (atom tree)
+          tree
+          (cons (our-subst new old (car tree))
+                (our-subst new old (cdr tree))))))
+
+
+(member 'b '(a b c))
+(member 'b '(a b c) :test #'equal)
+(member '(a) '((a) (z)) :test #'equal)
+
+(member 'a '((a b) (b c)) :key #'car)
+
+(member 2 '((a) (2)) :test #'equal :key #'car)
