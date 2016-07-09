@@ -120,3 +120,14 @@
 (member 'a '((a b) (b c)) :key #'car)
 
 (member 2 '((a) (2)) :test #'equal :key #'car)
+
+(member-if #'oddp '(2 3 5))
+
+(defun our-member-if (fn lst)
+  (when (consp lst)
+       (if (funcall fn (car lst))
+           lst
+           (our-member-if fn (cdr lst)))))
+
+(adjoin 'b '(a b c))
+(adjoin 'z '(a b c))
