@@ -151,3 +151,110 @@ gh" 'constituent 0)
       nil))
 
 (ry/parse-integer "100203")
+
+(defstruct (node (:print-function
+                  (lambda (n s d)
+                    (format s "#<~A>" (node-elt n)))))
+  elt
+  (l nil)
+  (r nil))
+
+(defun bst-insert (obj bst <)
+  (if (null bst)
+      (make-node :elt obj)
+      (let ((elt (node-elt bst)))
+        (if (eql obj elt)
+            bst
+            (if (funcall < obj elt)
+                (make-node
+                 :elt elt
+                 :l (bst-insert obj (node-l bst) <)
+                 :r (node-r bst))
+                (make-node
+                 :elt elt
+                 :l (node-l bst)
+                 :r (bst-insert obj (node-r bst) <)))))))
+
+(defun bst-find (obj bst <)
+  (if (null bst)
+      nil
+      (let ((elt (node-elt bst)))
+        (if (eql obj elt)
+            bst
+            (if (funcall < obj elt)
+                (bst-find obj (node-l bst) <)
+                (bst-find obj (node-r bst) <))))))
+
+(defun bst-min (bst)
+  (and bst
+       (or (bst-min (node-l bst)) bst)))
+
+(defun bst-max (bst)
+  (and bst
+       (or (bst-max (node-r bst)) bst)))
+
+(defun bst-tranverse (fn bst)
+  (when bst
+    (bst-tranverse fn (node-l bst))
+    (funcall fn (node-elt bst))
+    (bst-tranverse fn (node-r bst))))
+
+;; test
+(setf nums nil)
+(dolist (x '(5 8 4 2 1 9 6 7 3))
+  (setf nums (bst-insert x nums '<)))
+(bst-find 12 nums '<)
+(bst-find 9 nums '<)
+(bst-min nums)
+(bst-max nums)
+
+(bst-find 2 nums '<)
+(bst-tranverse 'princ nums)
+
+(defun bst-remove (obj bst <)
+  (if (null bst)
+      nil
+      (let ((elt (node-elt bst)))
+        (if (eql obj elt)
+            (percolate bst)
+            (if (funcall < obj elt)
+                (make-node :elt elt
+                           :l (bst-remove obj (node-l bst) <)
+                           :r (node-r bst))
+                (make-node :elt elt
+                           :l (node-l bst)
+                           :r (bst-remove obj (node-r bst) <)))))))
+
+
+(defun percolate (bst)
+  (cond ((null (node-l bst))
+         (if (null (node-r bst))
+             nil
+             (rperc bst)))
+        ((null (node-r bst))
+         (lperc bst))
+        (t (if (zerop (random 2))
+               (lperc bst)
+               (rperc bst)))))
+
+(defun rperc (bst)
+  (make-node :elt (node-elt (node-r bst))
+             :l (node-l bst)
+             :r (percolate (node-r bst))))
+(defun lperc (bst)
+  (make-node :elt (node-elt (node-l bst))
+             :l (percolate (node-l bst))
+             :r (node-r bst)))
+
+(bst-tranverse 'princ nums)
+(setf nums (bst-remove 2 nums '<))
+;; after remove
+(bst-tranverse 'princ nums)
+;; hashtable
+(setf th (make-hash-table))
+(setf (gethash 'hello th) 'red)
+(setf (gethash 'world th) 'green)
+(maphash (lambda (k v)
+           (format t "~A = ~A~%" k v))
+         th)
+(remhash 'world th)
