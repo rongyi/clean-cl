@@ -78,3 +78,37 @@
 
 ;; (mapcar (compose 'list 'round 'sqrt)
 ;;         '(4 9 16 25))
+
+
+(defun disjoin (fn &rest fns)
+  (if (null fns)
+      fn
+      (let ((disj (apply 'disjoin fns)))
+        (lambda (&rest args)
+          (or (apply fn args)
+              (apply disj args))))))
+
+(defun conjoin (fn &rest fns)
+  (if (null fns)
+      fn
+      (let ((disj (apply 'disjoin fns)))
+        (lambda (&rest args)
+          (or (apply fn args)
+              (apply disj args))))))
+
+;; (conjoin 'integerp 'symbolp 'stringp)
+
+(defun curry (fn &rest args)
+  (lambda (&rest args2)
+    (apply fn (append args args2))))
+
+(defun rcurry (fn &rest args)
+  (lambda (&rest args2)
+    (apply fn (append args2 args))))
+
+;; (funcall (curry '- 3) 2)
+;; (funcall (rcurry '- 3) 2)
+
+(defun always (x)
+  (lambda (&rest args)
+    x))
