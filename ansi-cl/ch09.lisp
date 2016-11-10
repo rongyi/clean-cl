@@ -31,5 +31,43 @@
           (let ((discrt (sqrt disc)))
             (min (/ (+ (- b) discrt) (* 2 a))
                  (/ (- (- b) discrt) (* 2 a))))))))
+
 ;; (minroot 1 0 16)
 ;; (minroot 0 1 -16)
+
+;; (distance (make-point :x 0 :y 0 :z 0) (make-point :x 1 :y 1 :z 1))
+
+
+(defstruct surface color)
+
+(defparameter *word* nil)
+
+(defconstant eye (make-point :x 0 :y 0 :z 200))
+
+(defun tracer (pathname &optional (res 1))
+  (with-open-file (p pathname :direction :output)
+    (format p "P2 ~A ~A 255" (* res 100) (* res 100))
+    (let ((inc (/ res)))
+      (do ((y -50 (+ y inc)))
+          ((< (- 50 y) inc))
+        (do ((x -50 (+ x inc)))
+            ((< (- 50 x) inc))
+          (print (color-at x y) p))))))
+
+(defun color-at (x y)
+  (multiple-value-bind (xr yr zr)
+      (unit-vector (- x (x eye))
+                   (- y (y eye))
+                   (- z (z eye)))
+    (round (* (sendray eye xr yr zr) 255))))
+
+(defun sendray (pt xr yr zr)
+  (multiple-value-bind (s int) (first-hit pt xr yr zr)
+    (if s
+        (* (lambert s int xr yr zr) (surface-color s))
+        0)))
+
+(defun first-hit (pt xr yr zr)
+  (let (surface hit dist)
+    (dolist (s *word*)
+      (let ((h (inter)))))))
