@@ -32,3 +32,14 @@
 ;; (quicksort (vector 1 9 2 4 5) 0 4)
 
 ;; when you start writing macros, you have to start thinking like a language designer
+
+(defmacro ntimes (n &rest body)
+  (let ((g (gensym))
+        (h (gensym)))
+    `(let ((,h ,n))
+       (do ((,g 0 (+ ,g 1)))
+           ((>= ,g ,h))
+         ,@body))))
+
+(ntimes 3
+        (princ "="))
