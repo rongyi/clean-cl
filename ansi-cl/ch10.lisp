@@ -43,3 +43,49 @@
 
 (ntimes 3
         (princ "="))
+
+(defmacro for (var start stop &body body)
+  (let ((gstop (gensym)))
+    `(do ((,var ,start (1+ ,var))
+          (,gstop ,stop))
+         ((> ,var ,gstop))
+       ,@body)))
+
+;; (for i 1 7
+;;   (princ i))
+
+(defmacro in (obj &rest choices)
+  (let ((insym (gensym)))
+    `(let ((,insym ,obj))
+       (or ,@(mapcar #'(lambda (c) `(eql ,insym ,c))
+                     choices)))))
+
+;; (in 'a 'b 'c 'd 'a)
+;; (pprint  (macroexpand-1 '(in 'a 'b 'c 'd)))
+
+(defmacro random-choice (&rest exprs)
+  `(case (random ,(length exprs))
+     ,@(let ((key -1))
+         (mapcar #'(lambda (expr)
+                   `(,(incf key) ,expr))
+                 exprs))))
+
+;; (pprint (macroexpand-1 '(random-choice (princ 1) (princ 2))))
+;; (random-choice (princ 1) (princ 2))
+
+(defmacro avg (&rest args)
+  `(/ (+ ,@args) ,(length args)))
+
+;; (avg 1 2 3 4)
+
+(defmacro ry/with-gensyms (syms &body body)
+  `(let ,(mapcar #'(lambda (s)
+                     `(,s (gensym)))
+                 syms)
+     ,@body))
+
+(defmacro aif (test then &optional else)
+  `(let ((it ,test))
+     (if it
+         ,then
+         ,else)))
