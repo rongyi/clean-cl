@@ -55,9 +55,19 @@
 (remove-if #'evenp '(1 3 5 7))
 ;; remove-if-not equals to filter
 (remove-if-not #'evenp '(1 3 5 7 8))
-(defun ry/remove-if-not (fn lst)
-  (remove-if #'(lambda (x)
-                 (not (funcall fn x)))
-             lst))
+(defun ry/remove-if (fn lst)
+  (if (null lst)
+      nil
+      (if (funcall fn (car lst))
+          (ry/remove-if fn (cdr lst))
+          (cons (car lst)
+                (ry/remove-if fn (cdr lst))))))
 
-(ry/remove-if-not #'evenp '(1 3 5 7 8))
+;; (ry/remove-if #'evenp '(1 3 4 5))
+
+(defun ry/remove-if-not (fn lst)
+  (ry/remove-if #'(lambda (x)
+                    (not (funcall fn x)))
+                lst))
+
+;; (ry/remove-if-not #'evenp '(1 3 5 7 8))
