@@ -152,3 +152,22 @@
 ;; (funcall #'push 'd lst)
 ;; (macroexpand-1 '(defalias insert push))
 ;; (defalias insert push)
+
+;; local function
+;; we can't use lambda to define a recursive function,
+;; because the function will have no way of refering to itself.
+;; define function
+(labels ((inc (x) (1+ x)))
+  (inc 3))
+(defun ry/count-instances (obj lsts)
+  (labels ((instance-in (lst)
+             (if (consp lst)
+                 (+ (if (eq (car lst) obj)
+                        1
+                        0)
+                    (instance-in (cdr lst)))
+                 0)))
+    (reduce #'+ (mapcar #'instance-in lsts))))
+
+(ry/count-instances 'a '('a b c))
+(reduce #'+ '(1 2 3) :initial-value 10)
