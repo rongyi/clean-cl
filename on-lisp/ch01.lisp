@@ -107,3 +107,17 @@
   (funcall add10 99))
 (setf add10 (make-adder 10))
 (funcall add10 99)
+
+;; closure's state can be changed
+(defun make-adder (n)
+  #'(lambda (x &optional change)
+      (if change
+          (progn
+            (setq n x)
+            (format t "reset value~%"))
+          (+ x n))))
+
+(setq addchange (make-adder 1))
+(funcall addchange 3)
+(funcall addchange 10 t)
+(format t "hell world~%")
