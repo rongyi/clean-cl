@@ -71,3 +71,39 @@
                 lst))
 
 ;; (ry/remove-if-not #'evenp '(1 3 5 7 8))
+;; closure test
+;; lexical scope is the default in Common Lisp, so the system must save
+;; copies of the bindings of those variables at the time the function
+;; was defined. Such a combination  of a function and a set of varialbe
+;; bindings is called a /closure/
+
+(let ((y 'defined))
+  (defun scope-test (x)
+    (list x y)))
+
+(let ((y 'dynamic))
+  (scope-test 7))
+
+(defun list+ (lst n)
+  (mapcar #'(lambda (x) (+ x n))
+          lst))
+
+;; (list+ '(1 2 3) 10)
+;; using closure
+(let ((count 0))
+  (defun genid ()
+    (incf count))
+  (defun reset-id ()
+    (setq count 0)))
+
+;; (genid)
+;; (reset-id)
+
+(defun make-adder (n)
+  #'(lambda (x) (+ x n)))
+
+;; why we need funcall?
+(let ((add10 (make-adder 10)))
+  (funcall add10 99))
+(setf add10 (make-adder 10))
+(funcall add10 99)
