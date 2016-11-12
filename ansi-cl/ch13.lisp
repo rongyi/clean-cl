@@ -1,0 +1,1 @@
+(time (setf a 'a))
