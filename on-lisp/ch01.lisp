@@ -48,3 +48,16 @@
 (mapcar #'+
         '(1 2 3)
         '(10 20 30 40))
+
+;; sort's first arg is a list
+(sort '(1 2 3 9 8 7) #'>)
+;; remove-if equal to reject
+(remove-if #'evenp '(1 3 5 7))
+;; remove-if-not equals to filter
+(remove-if-not #'evenp '(1 3 5 7 8))
+(defun ry/remove-if-not (fn lst)
+  (remove-if #'(lambda (x)
+                 (not (funcall fn x)))
+             lst))
+
+(ry/remove-if-not #'evenp '(1 3 5 7 8))
