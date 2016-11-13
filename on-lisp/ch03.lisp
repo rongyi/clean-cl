@@ -26,3 +26,11 @@
 
 ;; side effect rule should be: a given invocation can safely modify what it uniquely owns
 ;; If you call it twice with the same arguments, you should get the same results.
+
+;; Incremental testing is so valuable that Lisp style has evolved to take advantage of it.
+
+;; Lisp programmer actually design their programs to be easy to test:
+;; 1. They try to segreate side effect in a few functions, allowing the greater
+;; part of the program to be written in a purely functional style
+;; 2. If a function must perform side-effects, they try at least to give it a functional interface.
+;; 3. They give each function a single, well-defined purpose.
