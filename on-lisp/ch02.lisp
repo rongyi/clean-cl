@@ -171,3 +171,28 @@
 
 (ry/count-instances 'a '('a b c))
 (reduce #'+ '(1 2 3) :initial-value 10)
+
+
+;; tail recursion
+;; this is not tail recursion
+(defun ry/length (lst)
+  (if (null lst)
+      0
+      (1+ (ry/length (cdr lst)))))
+;; (ry/length '(1 2 3))
+
+;; this *is* tail recursion
+(defun ry/find-if (fn lst)
+  (if (funcall fn (car lst))
+      (car lst)
+      (ry/find-if fn (cdr lst))))
+
+;; (ry/find-if #'evenp '(1 2 3))
+
+(defun ry/length (lst)
+  (labels ((rec (lst acc)
+             (if (null lst)
+                 acc
+                 (rec (cdr lst) (1+ acc)))))
+    (rec lst 0)))
+;; (ry/length '(1 2 3))
