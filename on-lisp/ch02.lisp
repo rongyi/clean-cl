@@ -218,6 +218,7 @@
 ;; inline a function
 (defun 50th (lst)
   (nth 49 lst))
+;; using proclaim
 (proclaim '(inline 50th))
 (defun foo (lst)
   (+ (50th lst) 1))
