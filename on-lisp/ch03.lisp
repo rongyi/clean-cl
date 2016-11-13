@@ -23,3 +23,6 @@
 
 (multiple-value-bind (base root square) (power 4)
   (list base root square))
+
+;; side effect rule should be: a given invocation can safely modify what it uniquely owns
+;; If you call it twice with the same arguments, you should get the same results.
