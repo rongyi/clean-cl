@@ -214,3 +214,10 @@
 ;; a bit ugly
 (progn (compile 'bar '(lambda (x) (* x 2)))
        (compiled-function-p #'bar))
+
+;; inline a function
+(defun 50th (lst)
+  (nth 49 lst))
+(proclaim '(inline 50th))
+(defun foo (lst)
+  (+ (50th lst) 1))
