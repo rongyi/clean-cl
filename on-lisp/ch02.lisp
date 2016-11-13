@@ -195,4 +195,22 @@
                  acc
                  (rec (cdr lst) (1+ acc)))))
     (rec lst 0)))
+
 ;; (ry/length '(1 2 3))
+
+;; force compiler to expand tail recursion to loop
+;; (proclaim '(optimize speed))
+
+
+;; compilation
+(defun foo (x)
+  (1+ x))
+;; check compile
+(compiled-function-p #'foo)
+;; compile action, format
+(compile 'foo)
+(compile nil '(lambda (x)
+               (+ x 2)))
+;; a bit ugly
+(progn (compile 'bar '(lambda (x) (* x 2)))
+       (compiled-function-p #'bar))
