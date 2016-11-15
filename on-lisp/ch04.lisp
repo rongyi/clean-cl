@@ -126,3 +126,17 @@
 (split-if #'(lambda (x)
               (> x 4))
           '(1 2 3 4 5 6 7 8 9))
+
+(defun most (fn lst)
+  (if (null lst)
+      (values nil nil)
+      (let* ((wins (car lst))
+             (max (funcall fn wins)))
+        (dolist (obj (cdr lst))
+          (let ((score (funcall fn obj)))
+            (when (> score max)
+              (setq wins obj
+                    max score))))
+        (values wins max))))
+
+;; (most #'length '((1 2) (1 2 3)))
