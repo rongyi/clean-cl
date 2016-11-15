@@ -81,4 +81,48 @@
                                (cons (car tree) acc)))))))
     (rec tree nil)))
 
-(prune #'evenp '(1 2 (3 (4 5) 6) 7 8 (9)))
+;; (prune #'evenp '(1 2 (3 (4 5) 6) 7 8 (9)))
+
+
+(defun find2 (fn lst)
+  (if (null lst)
+      nil
+      (let ((val (funcall fn (car lst))))
+        (if val
+            (values (car lst) val)
+            (find2 fn (cdr lst))))))
+
+;; (find2 #'evenp '(1 2 3))
+
+(defun before (x y lst &key (test #'eql))
+  (and lst
+       (let ((first (car lst)))
+         (cond ((funcall test y first) nil)
+               ((funcall test x first) lst)
+               (t (before x y (cdr lst) :test test))))))
+
+;; (before 'a 'b '(a b c))
+
+(defun after (x y lst &key (test #'eql))
+  (let ((rest (before y x lst :test test)))
+    (and rest (member x rest :test test))))
+
+;; (after 'b 'a '(a b c))
+
+(defun duplicate (obj lst &key (test #'eql))
+  (member obj (cdr (member obj lst :test test))
+          :test test))
+
+;; (duplicate 'a '(a a b b))
+
+(defun split-if (fn lst)
+  (let ((acc nil))
+    (do ((src lst (cdr src)))
+        ((or (null src)
+             (funcall fn (car src)))
+         (values (nreverse acc) src))
+      (push (car src) acc))))
+
+(split-if #'(lambda (x)
+              (> x 4))
+          '(1 2 3 4 5 6 7 8 9))
