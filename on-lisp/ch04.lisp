@@ -140,3 +140,30 @@
         (values wins max))))
 
 ;; (most #'length '((1 2) (1 2 3)))
+
+(defun best (fn lst)
+  (if (null lst)
+      nil
+      (let ((wins (car lst)))
+        (dolist (obj (cdr lst))
+          (if (funcall fn obj wins)
+              (setq wins obj)))
+        wins)))
+
+;; (best #'< '(1 2 3 4 5))
+
+(defun mostn (fn lst)
+  (if (null lst)
+      (values nil nil)
+      (let ((result (list (car lst)))
+            (max (funcall fn (car lst))))
+        (dolist (obj (cdr lst))
+          (let ((score (funcall fn obj)))
+            (cond ((> score max)
+                   (setq max score
+                         result (list obj)))
+                  ((= score max)
+                   (push obj result)))))
+        (values (nreverse result) max))))
+
+(mostn #'length '((1 2 3) (4 5 6)))
