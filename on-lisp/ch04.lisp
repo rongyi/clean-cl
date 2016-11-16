@@ -167,3 +167,35 @@
         (values (nreverse result) max))))
 
 (mostn #'length '((1 2 3) (4 5 6)))
+
+;; (setf test '(a b c))
+;; (push 'a test)
+;; (nreverse '(a b c))
+
+;; or maybe range is the better name
+(defun map0-n (fn n)
+  (mapa-b fn 0 n))
+
+(defun range (fn n)
+  (mapa-b fn 0 n))
+
+(defun mapa-b (fn a b &optional (step 1))
+  (do ((i a (+ i step))
+       (result nil))
+      ((>= i b) (nreverse result))
+    (push (funcall fn i) result)))
+
+;; (range #'identity 5)
+
+(defun map-> (fn start test-fn succ-fn)
+  (do ((i start (funcall succ-fn i))
+       (result nil))
+      ((funcall test-fn i) (nreverse result))
+    (push (funcall fn i) result)))
+
+;; another way to define mapa-b
+(defun mapa-b (fn a b &optional (step 1))
+  (map-> fn
+         a
+         #'(lambda (x) (> x b))
+         #'(lambda (x) (+ x step))))
