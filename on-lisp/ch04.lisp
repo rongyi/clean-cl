@@ -242,3 +242,24 @@
              args)))
 
 ;; (rmapcar #'+ '(1 (2 (3) 4)) '(10 (20 (30) 40)))
+
+(defun readlist (&rest args)
+  (values (read-from-string
+           (concatenate 'string "("
+                        (apply #'read-line args)
+                        ")"))))
+
+;; (read-from-string "(hello world)")
+
+(defun prompt (&rest args)
+  (apply #'format *query-io* args)
+  (read *query-io*))
+
+;; awesome, another repl in repl
+(defun break-loop (fn quit &rest args)
+  (format *query-io* "Enteing break-loop. ~%")
+  (loop
+     (let ((in (apply #'prompt args)))
+       (if (funcall quit in)
+           (return)
+           (format *query-io* "~A~%" (funcall fn in))))))
