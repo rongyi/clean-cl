@@ -197,5 +197,48 @@
 (defun mapa-b (fn a b &optional (step 1))
   (map-> fn
          a
-         #'(lambda (x) (> x b))
+         #'(lambda (x) (>= x b))
          #'(lambda (x) (+ x step))))
+
+(defun mappend (fn &rest lsts)
+  (apply #'append (apply #'mapcar fn lsts)))
+
+
+;; (defun mklist (x)
+;;   (if (listp x)
+;;       x
+;;       (list x)))
+
+;; (mappend #'mklist '(1 2 3 (4 5)))
+
+;; test rest
+;; (defun testrest (&rest lsts)
+;;   lsts)
+;; (testrest '(1 2 4) '(5 6 7))
+
+;; mapcar test
+;; (mapcar #'1+ '(1 2 3))
+;; (apply #'mapcar #'1+ '((1 2 3)))
+;; (apply #'mapcar #'1+ '((1 2 3) (1 3 5)))
+
+;; append test
+;; (append '(1) '(2))
+
+(defun mapcars (fn &rest lsts)
+  (let ((result nil))
+    (dolist (lst lsts)
+      (dolist (obj lst)
+        (push (funcall fn obj) result)))
+    (nreverse result)))
+
+;; (mapcars #'1+ '(1 2 3 4) '(5 6 7 8))
+
+(defun rmapcar (fn &rest args)
+  (if (some #'atom args)
+      (apply fn args)
+      (apply #'mapcar
+             #'(lambda (&rest args)
+                 (apply #'rmapcar fn args))
+             args)))
+
+;; (rmapcar #'+ '(1 (2 (3) 4)) '(10 (20 (30) 40)))
