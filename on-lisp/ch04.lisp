@@ -263,3 +263,25 @@
        (if (funcall quit in)
            (return)
            (format *query-io* "~A~%" (funcall fn in))))))
+
+(defun mkstr (&rest args)
+  (with-output-to-string (s)
+    (dolist (a args)
+      (princ a s))))
+
+;; (mkstr pi "sdfasdf" 'pi)
+(defun symb (&rest args)
+  (values (intern (apply #'mkstr args))))
+
+;; (symb "hello" 'a)
+
+(defun reread (&rest args)
+  (values (read-from-string (apply #'mkstr args))))
+
+(defun explode (sym)
+  (map 'list #'(lambda (c)
+                 (intern (make-string 1
+                                      :initial-element c)))
+       (symbol-name sym)))
+
+;; (explode 'map)
