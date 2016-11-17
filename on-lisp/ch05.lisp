@@ -32,6 +32,23 @@
                              x)))
 
 ;; no cache
-(time (funcall slowid 1))
+;; (time (funcall slowid 1))
 ;; cached id 1
-(time (funcall slowid 1))
+;; (time (funcall slowid 1))
+
+;; (find-if #'oddp '(2 3 4))
+
+;; all the functions given as arguments to compose must be functions of one argument, except the last
+(defun compose (&rest fns)
+  (if fns
+      (let ((fn1 (car (last fns)))
+            (fns (butlast fns)))
+        #'(lambda (&rest args)
+            (reduce #'funcall fns
+                    :from-end t
+                    :initial-value (apply fn1 args))))
+      #'identity))
+
+;; test reduce
+;; (reduce #'list '(1 2 3 4) :from-end t :initial-value 0)
+;; (reduce #'funcall '(1+) :from-end t :initial-value 1)
