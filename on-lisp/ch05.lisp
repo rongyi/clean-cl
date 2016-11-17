@@ -52,3 +52,6 @@
 ;; test reduce
 ;; (reduce #'list '(1 2 3 4) :from-end t :initial-value 0)
 ;; (reduce #'funcall '(1+) :from-end t :initial-value 1)
+
+;; example
+;; (funcall (compose #'1+ #'find-if) #'oddp '(2 3 4))
