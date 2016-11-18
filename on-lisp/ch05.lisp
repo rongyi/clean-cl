@@ -187,4 +187,5 @@
       (mklist tree)
       (nconc (flattern (car tree))
              (if (cdr tree) (flattern (cdr tree))))))
+
 ;; (ry/flattern '((((((a b)))))))
