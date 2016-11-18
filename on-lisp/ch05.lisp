@@ -55,3 +55,42 @@
 
 ;; example
 ;; (funcall (compose #'1+ #'find-if) #'oddp '(2 3 4))
+;; define complement
+;; (defun ry/complement (pred)
+;;   (compose #'not pred))
+;; (remove-if (ry/complement #'oddp) '(1 2 3))
+
+(defun fif (if then &optional else)
+  #'(lambda (x)
+      (if (funcall if x)
+          (funcall then x)
+          (if else
+              (funcall else x)))))
+
+;; means function intersection
+(defun fint(fn &rest fns)
+  (if (null fns)
+      fn
+      (let ((chain (apply #'fint fns)))
+        #'(lambda (x)
+            (and (funcall fn x)
+                 (funcall chain x))))))
+
+;; (remove-if (fint #'(lambda (x)
+;;                      (> x 0))
+;;                  #'(lambda (x)
+;;                      (< x 10))) '(1 2 3 10 11 23))
+
+(defun fun (fn &rest fns)
+  (if (null fns)
+      fn
+      (let ((chain (apply #'fun fns)))
+        #'(lambda (x)
+            (or (funcall fn x)
+                (funcall chain x))))))
+
+(remove-if (fun #'(lambda (x)
+                     (> x 20))
+                 #'(lambda (x)
+                     (< x 10))) '(1 2 3 10 11 23))
+;; ==> '(10 11)
