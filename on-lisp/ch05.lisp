@@ -157,5 +157,17 @@
                        (funcall f))))
          '(1 2 3 4))
 
-
 ;; (adjoin 1 '(3 3 3 1))
+
+;; (setq x '(a b)
+;;       listx (list x 1))
+;; (eq x (car (copy-list listx)))
+;; (eq x (car (copy-tree listx)))
+(defun ry/copy-tree (tree)
+  (if (atom tree)
+      tree
+      (cons (ry/copy-tree (car tree))
+            (if (cdr tree)
+                (ry/copy-tree (cdr tree))))))
+
+;; (ry/copy-tree '(((((a)) b))))
