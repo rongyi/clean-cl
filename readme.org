@@ -1,6 +1,5 @@
 * About
-
-  Practice code of common lisp, most are code in
+  Practicing code of common lisp in books of:
   1. ANSI common lisp
   2. ON Lisp
   3. Land of Lisp
