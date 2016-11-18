@@ -110,3 +110,52 @@
 
 ;; (ry/every #'evenp '(2 4 6))
 ;; (ry/every #'evenp '(2 4 7))
+
+;; there are common pattern of this process
+;; so the list rec here is the general way to process it
+(defun lrec (rec &optional base)
+  (labels ((self (lst)
+             (if (null lst)
+                 (if (functionp base)
+                     (funcall base)
+                     base)
+                 (funcall rec (car lst)
+                          #'(lambda ()
+                              (self (cdr lst)))))))
+    #'self))
+
+(funcall (lrec #'(lambda (x f)
+                   (1+ (funcall f)))
+               0) '(1 2 3))
+
+(funcall (lrec #'(lambda (x f)
+                   (and (oddp x)
+                        (funcall f)))
+               t)
+         '(1 3 3))
+
+;; cons
+(funcall (lrec #'(lambda (x f)
+                   (cons x
+                         (funcall f)))) '(1 2 3))
+
+;; remove duplicate
+(funcall (lrec #'(lambda (x f)
+                   (adjoin x
+                           (funcall f))))
+         '(1 2 3))
+
+;; findif
+(funcall (lrec #'(lambda (x f)
+                   (if (oddp x)
+                       x
+                       (funcall f))))
+         '(1 2 3))
+;; some or contains
+(funcall (lrec #'(lambda (x f)
+                   (or (oddp x)
+                       (funcall f))))
+         '(1 2 3 4))
+
+
+;; (adjoin 1 '(3 3 3 1))
