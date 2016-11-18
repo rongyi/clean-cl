@@ -189,3 +189,36 @@
              (if (cdr tree) (flattern (cdr tree))))))
 
 ;; (ry/flattern '((((((a b)))))))
+
+(defun rfind-if (fn tree)
+  (if (atom tree)
+      (and (funcall fn tree) tree)
+      (or (rfind-if fn (car tree))
+          (if (cdr tree) (rfind-if fn (cdr tree))))))
+
+;; (rfind-if (fint #'numberp #'oddp)
+;;           '(2 (3 4) 5))
+
+(defun ttrav (rec &optional (base #'identity))
+  (labels ((self (tree)
+             (if (atom tree)
+                 (if (functionp base)
+                     (funcall base tree)
+                     base)
+                 (funcall rec (self (car tree))
+                          (if (cdr tree)
+                              (self (cdr tree)))))))
+    #'self))
+
+;; (ry/copy-tree '(((((a)) b))))
+;; (funcall (ttrav #'cons) '(a (((b c)))))
+
+(count-leaves '((a b (c d)) (e) f))
+;; count leaves
+(funcall (ttrav #'(lambda (l r)
+                    (+ l (or r 1)))
+                1)
+         '((a b (c d)) (e) f))
+
+;; flattern
+(funcall  (ttrav #'nconc #'mklist) '((((a  b c) d))))
