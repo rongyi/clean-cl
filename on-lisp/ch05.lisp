@@ -171,3 +171,20 @@
                 (ry/copy-tree (cdr tree))))))
 
 ;; (ry/copy-tree '(((((a)) b))))
+
+(defun count-leaves (tree)
+  (if (atom tree)
+      1
+      (+ (count-leaves (car tree))
+         (or (when (cdr tree)
+               (count-leaves (cdr tree)))
+             1))))
+
+;; (count-leaves '((a b (c d)) (e) f))
+
+(defun ry/flattern (tree)
+  (if (atom tree)
+      (mklist tree)
+      (nconc (flattern (car tree))
+             (if (cdr tree) (flattern (cdr tree))))))
+;; (ry/flattern '((((((a b)))))))
