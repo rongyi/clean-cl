@@ -89,8 +89,24 @@
             (or (funcall fn x)
                 (funcall chain x))))))
 
-(remove-if (fun #'(lambda (x)
-                     (> x 20))
-                 #'(lambda (x)
-                     (< x 10))) '(1 2 3 10 11 23))
+;; (remove-if (fun #'(lambda (x)
+;;                      (> x 20))
+;;                  #'(lambda (x)
+;;                      (< x 10))) '(1 2 3 10 11 23))
 ;; ==> '(10 11)
+
+;; recursive section
+(defun ry/length (lst)
+  (if (null lst)
+      0
+      (1+ (ry/length (cdr lst)))))
+;; (ry/length '(1 2 3 4))
+
+(defun ry/every (fn lst)
+  (if (null lst)
+      t
+      (and (funcall fn (car lst))
+           (ry/every fn (cdr lst)))))
+
+;; (ry/every #'evenp '(2 4 6))
+;; (ry/every #'evenp '(2 4 7))
