@@ -213,12 +213,12 @@
 ;; (ry/copy-tree '(((((a)) b))))
 ;; (funcall (ttrav #'cons) '(a (((b c)))))
 
-(count-leaves '((a b (c d)) (e) f))
+;; (count-leaves '((a b (c d)) (e) f))
 ;; count leaves
-(funcall (ttrav #'(lambda (l r)
-                    (+ l (or r 1)))
-                1)
-         '((a b (c d)) (e) f))
+;; (funcall (ttrav #'(lambda (l r)
+;;                     (+ l (or r 1)))
+;;                 1)
+;;          '((a b (c d)) (e) f))
 
 ;; flattern
-(funcall  (ttrav #'nconc #'mklist) '((((a  b c) d))))
+;; (funcall  (ttrav #'nconc #'mklist) '((((a  b c) d))))
