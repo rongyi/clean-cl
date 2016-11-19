@@ -222,3 +222,31 @@
 
 ;; flattern
 ;; (funcall  (ttrav #'nconc #'mklist) '((((a  b c) d))))
+
+(defun trec (rec &optional (base #'identity))
+  (labels ((self (tree)
+             (if (atom tree)
+                 (if (functionp base)
+                     (funcall base tree)
+                     base)
+                 (funcall rec tree
+                          #'(lambda ()
+                              (self (car tree)))
+                          #'(lambda ()
+                              (if (cdr tree)
+                                  (self (cdr tree))))))))
+    #'self))
+
+(funcall (trec #'(lambda (o l r)
+                   (nconc (funcall l)
+                          (funcall r)))
+               #'mklist)
+         '(((a b) c e (d e))))
+
+(funcall (trec #'(lambda (o l r)
+                   (or (funcall l)
+                       (funcall r)))
+               #'(lambda (tree)
+                   (and (oddp tree)
+                        tree)))
+         '((((1 3 4)))))
