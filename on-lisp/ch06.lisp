@@ -39,3 +39,9 @@
 (defnodev2 'us "Is he on a coin?" 'coin 'cidence)
 (defnodev2 'coin "Is the coin a penny?" 'penny 'coins)
 (defnodev2 'penny 'lincoln)
+
+;; version 3
+(defvar *nodes* nil)
+(defun defnode (&rest args)
+  (push args *nodes*)
+  args)
