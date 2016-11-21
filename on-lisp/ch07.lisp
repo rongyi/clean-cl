@@ -43,3 +43,15 @@
 (mapcar #'(lambda (x)
             (nif x 'p 'z 'n))
         '(0 2.5 -6))
+
+;; comma at
+(setq b '(1 2 3))
+;; `(a ,b c)
+;; `(a ,@b c)
+;; comma @ restrictions
+;; 1. comma at must occur within a sequence
+;; 2. the object to be spliced must be a list, unless it occures last
+(defmacro ry/when (test &body body)
+  `(if ,test
+       (progn
+         ,@body)))
