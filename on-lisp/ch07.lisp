@@ -23,10 +23,15 @@
 
 ;; withbackquote
 (defmacro nif (expr pos zero neg)
-  `(case (truncate (signum ,expt))
+  `(case (truncate (signum ,expr))
      (1 ,pos)
      (0 ,zero)
      (-1 ,neg)))
+
+(mapcar #'(lambda (x)
+            (nif x 'p 'z 'n))
+        '(0 2.5 -6))
+
 ;; without backquote
 (defmacro nil (expr pos zero neg)
   (list 'case
@@ -34,3 +39,7 @@
         (list 1 pos)
         (list 0 zero)
         (list -1 neg)))
+
+(mapcar #'(lambda (x)
+            (nif x 'p 'z 'n))
+        '(0 2.5 -6))
