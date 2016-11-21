@@ -55,3 +55,13 @@
   `(if ,test
        (progn
          ,@body)))
+
+;; backquote is so often used in macro definitions that people sometimes think of backquote as poart
+;; of defmacro
+
+;; In programming, the best way to learn is often to begin experimenting as
+;; soon as possible.
+
+(defmacro memq (obj lst)
+  `(member ,obj ,lst :test #'eq))
+;; (macroexpand-1 '(memq 1 '(1 2 3)))
