@@ -65,3 +65,8 @@
 (defmacro memq (obj lst)
   `(member ,obj ,lst :test #'eq))
 ;; (macroexpand-1 '(memq 1 '(1 2 3)))
+
+(defmacro while (test &body body)
+  `(do ()
+       ((not ,test))
+     ,@body))
