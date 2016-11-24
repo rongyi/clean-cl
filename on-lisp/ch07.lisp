@@ -70,3 +70,9 @@
   `(do ()
        ((not ,test))
      ,@body))
+
+;; how to test macro
+(defmacro testmacro (expr)
+  `(pprint (macroexpand-1 ',expr)))
+
+;; (testmacro '(while (able) (laugh)))
