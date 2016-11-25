@@ -151,10 +151,29 @@
 ;;             (list (1+ x) 'y))
 ;;         '(1 2 3))
 
-(testmacro (ry/do ((w 3)
-                   (x 1 (1+ x))
-                   (y 2 (1+ y))
-                   (z))
-               ((> x 10) (princ z) y)
-             (princ x)
-             (princ y)))
+;; (testmacro (ry/do ((w 3)
+;;                    (x 1 (1+ x))
+;;                    (y 2 (1+ y))
+;;                    (z))
+;;                ((> x 10) (princ z) y)
+;;              (princ x)
+;;              (princ y)))
+
+;; Style matters when code is either read by people or evaluated by Lisp
+
+(defmacro ry/and (&rest args)
+  (case (length args)
+    (0 t)
+    (1 (car args))
+    (t `(if ,(car args)
+            (ry/and ,@(cdr args))))))
+
+(defmacro ry/andb (&rest args)
+  (if (null args)
+      t
+      (labels ((expander (rest)
+                 (if (cdr rest)
+                     `(if ,(car rest)
+                          ,(expander (cdr rest)))
+                     (car rest))))
+        (expander args))))
