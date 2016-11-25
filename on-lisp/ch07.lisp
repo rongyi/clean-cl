@@ -76,3 +76,44 @@
   `(pprint (macroexpand-1 ',expr)))
 
 ;; (testmacro '(while (able) (laugh)))
+;; macroexpand-1 can also be used to expand the Common Lisp standard macros
+
+;; Destructuring describes the situation where this sort of positional assignment is done for arbitrary
+;; list structures, as well as flat lists like (x y z)
+
+(defmacro ry/dolist ((var list &optional result) &body body)
+  `(progn
+     (mapc #'(lambda (,var) ,@body)
+           ,list)
+     (let ((,var nil))
+       ,result)))
+(testmacro (ry/dolist (x '(a b c))))
+
+;; mapc is like mapcar except that the results of applying function are not accumulated. The list argument is returned.
+;; (mapcar #'(lambda (x)
+;;             (1+ (* x 2)))
+;;         '(1 2 3 4))
+
+(defmacro when-bind ((var expr) &body body)
+  `(let ((,var ,expr))
+     (when ,var
+       ,@body)))
+
+(defmacro ry/expander (name)
+  `(get ,name 'expander))
+
+(defmacro ry/defmacro (name params &body body)
+  (let ((g (gensym)))
+    `(progn
+       (setf (ry/expander ',name)
+             #'(lambda (,g)
+                 (block ,name
+                   (destructuring-bind ,params (cdr ,g)
+                     ,@body))))
+       ',name)))
+
+(defun ry/macroexpand-1 (expr)
+  (if (and (consp expr)
+           (ry/expander (car expr)))
+      (funcall (ry/expander (car expr)) expr)
+      expr))
