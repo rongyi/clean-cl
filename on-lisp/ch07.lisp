@@ -143,6 +143,14 @@
                   nil))
           bindforms))
 
+;; (mapcar #'(lambda (x)
+;;             (1+ x))
+;;         '(1 2 3))
+
+;; (mapcan #'(lambda (x)
+;;             (list (1+ x) 'y))
+;;         '(1 2 3))
+
 (testmacro (ry/do ((w 3)
                    (x 1 (1+ x))
                    (y 2 (1+ y))
