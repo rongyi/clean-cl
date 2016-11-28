@@ -202,3 +202,26 @@
 ;; 5. Have no parameter which occurs more than once in the body
 ;; 6 Have no parameter whose value is used before that of another parameter occuring before it in the parameter list
 ;; 7. Contain no free variables
+
+(defun ry/second (cadr x))
+(defmacro ry/second (x) `(cadr ,x))
+
+(defun nosisy-second (x)
+  (princ "someone is taking a cadr")
+  (cadr x))
+;; add a progn
+(defmacro nosisy-second (x)
+  `(progn
+     (princ "someone is taking a cadr")
+     (cadr ,x)))
+
+(defun sum (&rest args)
+  (apply #'+ args))
+
+(defmacro sum (&rest args)
+  `(apply #'+ (list ,@args)))
+;; (testmacro  (sum 1 2 3))
+
+(defmacro sum (&rest args)
+  `(+ ,@args))
+;; (sum 1 2 3)
