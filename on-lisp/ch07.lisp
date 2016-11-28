@@ -177,3 +177,28 @@
                           ,(expander (cdr rest)))
                      (car rest))))
         (expander args))))
+;; A utility which conses unnecessarily can ruin the performance of an otherwise efficient program
+
+(defmacro inc1 (x)
+  `(1+ ,x))
+
+;; macro need recomiple:
+;; a macro definition must be seen by the compiler before the first use of the macro
+(setq fn (compile nil `(lambda (y)
+                         (inc1 y))))
+(funcall fn 1)
+(defmacro inc1 (x)
+  `(+ 100 ,x))
+;; still 2
+(funcall fn 1)
+
+
+;; transelate function ==> macro
+;; easy case:
+;; 1. Have a body consisting of a single expression.
+;; 2. Have a parameter list consisting only of parameter names
+;; 3. Create no new variables
+;; 4. Are no recursive
+;; 5. Have no parameter which occurs more than once in the body
+;; 6 Have no parameter whose value is used before that of another parameter occuring before it in the parameter list
+;; 7. Contain no free variables
