@@ -233,3 +233,8 @@
 (defmacro foo (x y z)
   `(list ,x (let ((x ,y))
               (list x ,z))))
+
+;; symbol macros
+(symbol-macrolet ((hi (progn (print "Howdy")
+                             1)))
+  (+ hi 2))
