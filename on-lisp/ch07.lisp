@@ -225,3 +225,11 @@
 (defmacro sum (&rest args)
   `(+ ,@args))
 ;; (sum 1 2 3)
+
+(defun foo (x y z)
+  (list x (let ((x y))
+            (list x z))))
+
+(defmacro foo (x y z)
+  `(list ,x (let ((x ,y))
+              (list x ,z))))
