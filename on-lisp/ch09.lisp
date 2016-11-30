@@ -38,3 +38,15 @@
           (,gstop ,stop))
          ((> ,var ,gstop))
        ,@body)))
+
+(defun fn (x)
+  (+ x 1))
+(defmacro mac (x)
+  `(fn ,x))
+;; (mac 1)
+;; (labels ((fn (y)
+;;            (- y 1)))
+;;   (mac 10))
+;; most function are global
+
+;; Why write programs with small bugs when you could write programs with no bugs?
