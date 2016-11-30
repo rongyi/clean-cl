@@ -50,3 +50,9 @@
 ;; most function are global
 
 ;; Why write programs with small bugs when you could write programs with no bugs?
+;; The longer answer is to point out that in real applications it's dangerous to
+;; assume anything about the way your code will be used. If you're writing code other
+;; people will use, they may use it in ways you'd never anticipate.
+
+;; The classic Common Lisp defmacro is like a cook's knife:
+;; an elegant idea which seems dangerous, but which experts use with confidence.
