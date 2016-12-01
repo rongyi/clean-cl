@@ -63,6 +63,3 @@
 (ora 'nil 2)
 (macroexpand-1 (ora '(3 2)))
 (orb 'nil 2)
-
-
-sk
