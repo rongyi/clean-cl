@@ -107,3 +107,50 @@
 ;;    (LET (#:G4003 #:G4004 #:G4005)
 ;;     (LET ((#:G4004 (PRINC 'E)) (#:G4005 (PRINC 'F)))
 ;;      (#:G4002 #:G4003 #:G4004 #:G4005))))))
+
+;; The names of context building macros often begin with with-.
+
+;; (setq x 'a)
+;; (unwind-protect
+;;      (progn (princ "what error?")
+;;             (error "this error"))
+;;   (setq x 'b))
+
+
+(defmacro if3 (test t-case nil-case ?-case)
+  `(case ,test
+     ((nil) ,nil-case)
+     (? ,?nil-case)
+     (t ,t-case)))
+
+(defmacro nif (expr pos zero neg)
+  (let ((g (gensym)))
+    `(let ((,g ,expr))
+       (cond ((plusp ,g) ,pos)
+             ((zerop ,g) , zero)
+             (t ,neg)))))
+
+;; (mapcar #'(lambda (x)
+;;             (nif x 'p 'z 'n))
+;;         '(0 1 -1))
+
+(defmacro in (obj &rest choices)
+  (let ((insym (gensym)))
+    `(let ((,insym ,obj))
+       (or ,@(mapcar #'(lambda (c)
+                         `(eql ,insym ,c))
+                     choices)))))
+;; (in t nil nil nil t)
+;; (in t nil nil nil nil)
+
+(defmacro inq (obj &rest args)
+  `(in ,obj ,@(mapcar #'(lambda (a)
+                          `',a)
+                      args)))
+
+(defmacro in-if (fn &rest choices)
+  (let ((fnsym (gensym)))
+    `(let ((,fnsym ,fn))
+       (or ,@(mapcar #'(lambda (c)
+                         `(funcall ,fnsym ,c))
+                     choices)))))
