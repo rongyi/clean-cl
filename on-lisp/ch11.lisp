@@ -190,3 +190,21 @@
   `(do ()
        (,test)
      @body))
+
+;; a c like for
+(defmacro cfor ((var start stop) &body body)
+  (let ((gstop (gensym)))
+    `(do ((,var ,start (1+ ,var))
+          (,gstop ,stop))
+         ((>= ,var ,gstop))
+       ,@body)))
+
+(defmacro for ((var start stop) &body body)
+  (let ((gstop (gensym)))
+    `(do ((,var ,start (1+ ,var))
+          (,gstop ,stop))
+         ((>= ,var ,gstop))
+       ,@body)))
+
+;; (cfor (i 0 10)
+;;   (princ i))
