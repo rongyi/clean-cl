@@ -169,3 +169,24 @@
        (cond ,@(mapcar #'(lambda (cl)
                            (>casex g cl))
                        clauses)))))
+
+;; iteration
+(defmacro forever (&body body)
+  `(do ()
+       (nil)
+     ,@body))
+
+(defmacro while (test &body body)
+  `(do ()
+       ((not ,test))
+     ,@body))
+
+(let ((x 1))
+  (while (< x 10)
+    (princ x)
+    (incf x)))
+
+(defmacro till (test &body body)
+  `(do ()
+       (,test)
+     @body))
