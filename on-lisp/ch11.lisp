@@ -189,7 +189,7 @@
 (defmacro till (test &body body)
   `(do ()
        (,test)
-     @body))
+    @body))
 
 ;; a c like for
 (defmacro cfor ((var start stop) &body body)
@@ -208,3 +208,38 @@
 
 ;; (cfor (i 0 10)
 ;;   (princ i))
+
+(defun dt-args (len rest src)
+  (map0-n #'(lambda (m)
+              (map1-n #'(lambda (n)
+                          (let ((x (+ m n)))
+                            (if (>= x len)
+                                `(nth ,(- x len) ,src)
+                                `(nth ,(1- x) ,rest))))
+                      len))
+          (- len 2)))
+
+;; http://www.paulgraham.com/onlisperrata.html
+;; p. 156. In do-tuples/o the expression (1- (length parms)) should be (- (length source) (length parms)).
+;; Reported by Roland. (at netquant.com.br)
+(defmacro do-tuples/o (parms source &body body)
+  (if parms
+      (let ((src (gensym)))
+        `(prog ((,src ,source))
+            (mapc #'(lambda ,parms ,@body)
+                  ,@(map0-n #'(lambda (n)
+                                `(nthcdr ,n ,src))
+                            (- (length source) (length parms))))))))
+
+;; (nthcdr 2 '(a b c))
+
+;; (mapc #'oddp '(1 2 3 4))
+(testmacro  (do-tuples/o (x y) '(a b c d)
+              (princ (list x y))))
+
+(do-tuples/o (x y) '(a b c d)
+  (princ (list x y)))
+
+(map0-n #'(lambda (n)
+            (nthcdr n '(a b c d)))
+        (- 4 2))

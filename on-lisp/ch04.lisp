@@ -200,7 +200,7 @@
 (defun mapa-b (fn a b &optional (step 1))
   (map-> fn
          a
-         #'(lambda (x) (>= x b))
+         #'(lambda (x) (> x b))
          #'(lambda (x) (+ x step))))
 
 (defun mappend (fn &rest lsts)
