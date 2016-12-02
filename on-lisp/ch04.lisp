@@ -176,6 +176,9 @@
 (defun map0-n (fn n)
   (mapa-b fn 0 n))
 
+(defun map1-n (fn n)
+  (mapa-b fn 1 n))
+
 (defun range (fn n)
   (mapa-b fn 0 n))
 

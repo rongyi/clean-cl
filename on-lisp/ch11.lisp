@@ -72,22 +72,22 @@
                            (condlet-clause vars cl bodfn))
                        clauses)))))
 
-(testmacro (condlet
-               (((= 1 2) (x (princ 'a)) (y (princ 'b)))
-                ((= 1 1) (x (princ 'c)) (y (princ 'd)))
-                (t (x (princ 'e)) (z (princ 'f))))
-             (list x y z)))
+;; (testmacro (condlet
+;;                (((= 1 2) (x (princ 'a)) (y (princ 'b)))
+;;                 ((= 1 1) (x (princ 'c)) (y (princ 'd)))
+;;                 (t (x (princ 'e)) (z (princ 'f))))
+;;              (list x y z)))
 
 ;; 有点懵逼，这后面全是解释
 ;; test code to understand the code above
 
 ;; the code to generate parameter
-(defun test (clauses &rest rest)
-  (remove-duplicates (mapcar #'car (mappend #'cdr clauses))))
-(test '(((= 1 2) (x (princ 'a)) (y (princ 'b)))
-        ((= 1 1) (x (princ 'c)) (y (princ 'd)))
-        (t (x (princ 'e)) (z (princ 'f)))))
-(cdr  (assoc 'x '((x 1) (y 2))))
+;; (defun test (clauses &rest rest)
+;;   (remove-duplicates (mapcar #'car (mappend #'cdr clauses))))
+;; (test '(((= 1 2) (x (princ 'a)) (y (princ 'b)))
+;;         ((= 1 1) (x (princ 'c)) (y (princ 'd)))
+;;         (t (x (princ 'e)) (z (princ 'f)))))
+;; (cdr  (assoc 'x '((x 1) (y 2))))
 
 ;; sample output
 
