@@ -182,10 +182,10 @@
 (defun mapa-b (fn a b &optional (step 1))
   (do ((i a (+ i step))
        (result nil))
-      ((>= i b) (nreverse result))
+      ((> i b) (nreverse result))
     (push (funcall fn i) result)))
 
-;; (range #'identity 5)
+(range #'identity 5)
 
 (defun map-> (fn start test-fn succ-fn)
   (do ((i start (funcall succ-fn i))
