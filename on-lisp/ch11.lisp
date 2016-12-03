@@ -222,6 +222,8 @@
 ;; http://www.paulgraham.com/onlisperrata.html
 ;; p. 156. In do-tuples/o the expression (1- (length parms)) should be (- (length source) (length parms)).
 ;; Reported by Roland. (at netquant.com.br)
+;; the report is error
+
 (defmacro do-tuples/o (parms source &body body)
   (if parms
       (let ((src (gensym)))
@@ -229,17 +231,15 @@
             (mapc #'(lambda ,parms ,@body)
                   ,@(map0-n #'(lambda (n)
                                 `(nthcdr ,n ,src))
-                            (- (length source) (length parms))))))))
+                            (1- (length parms))))))))
 
-;; (nthcdr 2 '(a b c))
-
-;; (mapc #'oddp '(1 2 3 4))
-(testmacro  (do-tuples/o (x y) '(a b c d)
-              (princ (list x y))))
-
+(testmacro (do-tuples/o (x y) '(a b c d)
+             (princ (list x y))))
 (do-tuples/o (x y) '(a b c d)
   (princ (list x y)))
 
-(map0-n #'(lambda (n)
-            (nthcdr n '(a b c d)))
-        (- 4 2))
+(mapc #'(lambda (x y)
+          (princ x)
+          (princ y))
+      '(a b c d)
+      '(b c d))
