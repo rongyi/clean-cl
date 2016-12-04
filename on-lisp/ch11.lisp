@@ -39,7 +39,7 @@
 ;;   (+ y 10))
 ;; (find-if #'oddp '(2 4 1))
 
-(defmacro ry/with-gensyms (syms &body body)
+(defmacro with-gensyms (syms &body body)
   `(let ,(mapcar #'(lambda (s)
                      `(,s (gensym)))
                  syms)
@@ -209,15 +209,7 @@
 ;; (cfor (i 0 10)
 ;;   (princ i))
 
-(defun dt-args (len rest src)
-  (map0-n #'(lambda (m)
-              (map1-n #'(lambda (n)
-                          (let ((x (+ m n)))
-                            (if (>= x len)
-                                `(nth ,(- x len) ,src)
-                                `(nth ,(1- x) ,rest))))
-                      len))
-          (- len 2)))
+
 
 ;; http://www.paulgraham.com/onlisperrata.html
 ;; p. 156. In do-tuples/o the expression (1- (length parms)) should be (- (length source) (length parms)).
@@ -233,13 +225,49 @@
                                 `(nthcdr ,n ,src))
                             (1- (length parms))))))))
 
-(testmacro (do-tuples/o (x y) '(a b c d)
-             (princ (list x y))))
-(do-tuples/o (x y) '(a b c d)
-  (princ (list x y)))
+;; (testmacro (do-tuples/o (x y) '(a b c d)
+;;              (princ (list x y))))
+;; (do-tuples/o (x y) '(a b c d)
+;;   (princ (list x y)))
 
-(mapc #'(lambda (x y)
-          (princ x)
-          (princ y))
-      '(a b c d)
-      '(b c d))
+;; (mapc #'(lambda (x y)
+;;           (princ x)
+;;           (princ y))
+;;       '(a b c d)
+;;       '(b c d))
+
+
+(defmacro do-tuples/c (parms source &body body)
+  (if parms
+      (with-gensyms (src rest bodfn)
+        (let ((len (length parms)))
+          `(let ((,src ,source))
+             (when (nthcdr ,(1- len) ,src)
+               (labels ((,bodfn ,parms ,@body))
+                 (do ((,rest ,src (cdr ,rest)))
+                     ((not (nthcdr ,(1- len) ,rest))
+                      ,@(mapcar (lambda (args)
+                                  `(,bodfn ,@args))
+                                (dt-args len rest src))
+                      nil)
+                   (,bodfn ,@(map1-n (lambda (n)
+                                       `(nth ,(1- n)
+                                             ,rest))
+                                     len))))))))))
+
+
+(defun dt-args (len rest src)
+  (map0-n (lambda (m)
+            (map1-n (lambda (n)
+                      (let ((x (+ m n)))
+                        (if (>= x len)
+                            `(nth ,(- x len) ,src)
+                            `(nth ,(1- x) ,rest))))
+                    len))
+          (- len 2)))
+
+;; (do-tuples/c (x y) '(a b c d)
+;;   (princ (list x y)))
+
+;; (testmacro (do-tuples/c (x y) '(a b c d)
+;;              (princ (list x y))))
