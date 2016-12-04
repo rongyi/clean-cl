@@ -4,3 +4,4 @@
   2. ON Lisp
   3. Land of Lisp
   4. Common Lisp recipe
+  5. Let over lambda
