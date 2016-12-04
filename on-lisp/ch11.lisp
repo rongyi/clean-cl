@@ -271,3 +271,13 @@
 
 ;; (testmacro (do-tuples/c (x y) '(a b c d)
 ;;              (princ (list x y))))
+
+;; to help understand do-tuples/c
+;; (let ((lst '(a b c d)))
+;;   (when (nthcdr 1 lst)
+;;     (labels ((help (x y)
+;;                (princ (list x y))))
+;;       (do ((i lst (cdr i)))
+;;           ((not (nthcdr 1 i))
+;;            (help (nth 0 i) (nth 0 lst)) nil)
+;;         (help (nth 0 i) (nth 1 i))))))
