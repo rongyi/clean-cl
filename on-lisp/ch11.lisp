@@ -393,12 +393,23 @@
                              binds))
           (go ,label)))))
 
-(mvdo ((x 1 (1+ x))
-       ((y z) (values 0 0) (values z x)))
-    ((> x 5) (list x y z))
-  (princ (list x y z)))
+;; (mvdo ((x 1 (1+ x))
+;;        ((y z) (values 0 0) (values z x)))
+;;     ((> x 5) (list x y z))
+;;   (princ (list x y z)))
 
-(testmacro (mvdo ((x 1 (1+ x))
-       ((y z) (values 0 0) (values z x)))
-    ((> x 5) (list x y z))
-  (princ (list x y z))))
+;; (testmacro (mvdo ((x 1 (1+ x))
+;;        ((y z) (values 0 0) (values z x)))
+;;     ((> x 5) (list x y z))
+;;   (princ (list x y z))))
+
+(defun fnif (test then &optional else)
+  (if test
+      (funcall then)
+      (if else (funcall else))))
+
+;; (fnif (rich)
+;;       #'(lambda ()
+;;           (go-sailing))
+;;       #'(lambda ()
+;;           (rob-bank)))
