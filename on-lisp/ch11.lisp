@@ -363,3 +363,42 @@
 ;; (let ((w 0) (x 1) (y 2) (z 3))
 ;;               (mvpsetq (w x) (values 'a 'b) (y z) (values w x))
 ;;               (list w x y z))
+
+(defmacro mvdo (binds (test &rest result) &body body)
+  (let ((label (gensym))
+        (temps (mapcar #'(lambda (b)
+                           (if (listp (car b))
+                               (mapcar #'(lambda (x)
+                                           (gensym))
+                                       (car b))
+                               (gensym)))
+                       binds)))
+    `(let ,(mappend #'mklist temps)
+       (mvpsetq ,@(mapcan #'(lambda (b var)
+                              (list var (cadr b)))
+                          binds
+                          temps))
+       (prog ,(mapcar #'(lambda (b var)
+                          (list b var))
+                      (mappend #'mklist (mapcar #'car binds))
+                      (mappend #'mklist temps))
+          ,label
+          (if ,test
+              (return (progn ,@result)))
+          ,@body
+          (mvpsetq ,@(mapcan #'(lambda (b)
+                                 (if (third b)
+                                     (list (car b)
+                                           (third b))))
+                             binds))
+          (go ,label)))))
+
+(mvdo ((x 1 (1+ x))
+       ((y z) (values 0 0) (values z x)))
+    ((> x 5) (list x y z))
+  (princ (list x y z)))
+
+(testmacro (mvdo ((x 1 (1+ x))
+       ((y z) (values 0 0) (values z x)))
+    ((> x 5) (list x y z))
+  (princ (list x y z))))
