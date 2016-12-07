@@ -71,3 +71,12 @@
 
 
 ;; Since we can have the generality of setf at no extra cost, it is rarely desireable to use setq in a macroexpansion
+
+(define-modify-macro concf (obj) nconc)
+(define-modify-macro conc1f (obj)
+  (lambda (place obj)
+    (nconc place (list obj))))
+(define-modify-macro concnew (obj &rest args)
+  (lambda (place obj &rest args)
+    (unless (apply #'member obj place args)
+      (nconc place (list obj)))))
