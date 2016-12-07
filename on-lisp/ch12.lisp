@@ -80,3 +80,5 @@
   (lambda (place obj &rest args)
     (unless (apply #'member obj place args)
       (nconc place (list obj)))))
+;; based on function conc1
+(define-modify-macro conc1f (obj) conc1)
