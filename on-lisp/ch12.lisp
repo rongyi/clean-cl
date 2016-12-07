@@ -38,11 +38,11 @@
   lst)
 
 (defmacro allf (val &rest args)
-  (with-gensyms (gval)
+  (let ((gval (gensym)))
     `(let ((,gval ,val))
-       (setf ,@(mapcan #'(lambda (a)
-                           (list a gval))
+       (setf ,@(mapcan #'(lambda (a) (list a gval))
                        args)))))
+
 
 (defmacro nilf (&rest args)
   `(allf nil ,@args))
@@ -56,8 +56,18 @@
                args)))
 
 (define-modify-macro toggle2 () not)
+
 ;; mapcan can be see as a glue
 ;; (mapcan #'(lambda (x)
 ;;             (if (oddp x)
 ;;                 (list x)))
 ;;         '(1 2 3 4 5))
+
+;; (setf x 1 y 2)
+;; (setf x nil y nil z nil)
+;; (nilf x y z)
+;; (testmacro  (nilf x y z))
+;; (nilf x y z)
+
+
+;; Since we can have the generality of setf at no extra cost, it is rarely desireable to use setq in a macroexpansion

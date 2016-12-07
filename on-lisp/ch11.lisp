@@ -39,7 +39,7 @@
 ;;   (+ y 10))
 ;; (find-if #'oddp '(2 4 1))
 
-(defmacro with-gensyms (syms &body body)
+(defmacro ry/with-gensyms (syms &body body)
   `(let ,(mapcar #'(lambda (s)
                      `(,s (gensym)))
                  syms)
