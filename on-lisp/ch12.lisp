@@ -82,3 +82,31 @@
       (nconc place (list obj)))))
 ;; based on function conc1
 (define-modify-macro conc1f (obj) conc1)
+
+;; write a incf like function _f
+;; wrong version
+(defmacro _f (op place &rest args)
+  `(setf ,place (,op ,place ,@args)))
+
+;; (aref (setq alpha (make-array 4)) 3)
+;; (setf (aref alpha 3) 'sirens)
+
+;; test the return of the get-setf-method function
+(let ((a (make-array 4))
+      (i -1))
+  (setf (aref a 0) 1)
+  (incf (aref a (incf i)))
+  (get-setf-method '(aref a (incf i))))
+
+(defmacro _f (op place &rest args)
+  (multiple-value-bind (vars forms var set access)
+      (get-setf-method place)
+    `(let* (,@(mapcar #'list vars forms)
+            (,(car var) (,op ,access ,@args)))
+       ,set)))
+
+(defmacro conc1f (lst obj)
+  `(_f nconc ,lst (list ,obj)))
+
+;; (let ((x '(a b c d)))
+;;   (conc1f x 'd))
