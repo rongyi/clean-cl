@@ -110,3 +110,43 @@
 
 ;; (let ((x '(a b c d)))
 ;;   (conc1f x 'd))
+
+(defmacro pull (obj place &rest args)
+  (multiple-value-bind (vars forms var set access)
+      (get-setf-method place)
+      (let ((g (gensym)))
+        `(let* ((,g ,obj)
+                ,@(mapcar #'list vars forms)
+                (,(car var) (delete ,g ,access ,@args)))
+           ,set))))
+
+;; (setq x '(1 2 (a b) 3))
+;; (pull 2 x)
+;; (pull '(a b) x :test #'equal)
+
+(defmacro pull-if (obj place &rest args)
+  (multiple-value-bind (vars forms var set access)
+      (get-setf-method place)
+      (let ((g (gensym)))
+        `(let* ((,g ,obj)
+                ,@(mapcar #'list vars forms)
+                (,(car var) (delete-if ,g ,access ,@args)))
+           ,set))))
+
+;; (let ((lst '(1 2 3 4 5 6 7)))
+;;   (pull-if #'oddp lst)
+;;   lst)
+
+(defmacro popn (n place)
+  (multiple-value-bind (vars forms var set access)
+      (get-setf-method place)
+    (ry/with-gensyms (gn glst)
+      `(let* ((,gn ,n)
+              ,@(mapcar #'list vars forms)
+              (,glst ,access)
+              (,(car var) (nthcdr ,gn ,glst)))
+         (prog1 (subseq ,glst 0 ,gn)
+           ,set)))))
+
+;; (setq x '(a b c d e f))
+;; (popn 3 x)
