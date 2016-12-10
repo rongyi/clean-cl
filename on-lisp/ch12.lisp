@@ -150,3 +150,31 @@
 
 ;; (setq x '(a b c d e f))
 ;; (popn 3 x)
+
+(defmacro sortf (op &rest places)
+  (let* ((meths (mapcar #'(lambda (p)
+                            (multiple-value-list
+                             (get-setf-method p)))
+                        places))
+         (temps (apply #'append (mapcar #'third meths))))
+    `(let* ,(mapcar #'list
+                    (mapcan #'(lambda (m)
+                                (append (first m)
+                                        (third m)))
+                            meths)
+                    (mapcan #'(lambda (m)
+                                (append (second m)
+                                        (list (fifth m))))
+                            meths))
+       ,@(mapcon #'(lambda (rest)
+                     (mapcar #'(lambda (arg)
+                                 `(unless (,op ,(car rest) ,arg)
+                                    (rotatef ,(car rest) ,arg)))
+                             (cdr rest)))
+                 temps)
+       ,@(mapcar #'fourth meths))))
+
+;; (setq x 1 y 2 z 3)
+;; (testmacro (sortf > x y z))
+;; (sortf > x y z)
+;; (list x y z)
