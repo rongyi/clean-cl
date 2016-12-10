@@ -178,3 +178,17 @@
 ;; (testmacro (sortf > x y z))
 ;; (sortf > x y z)
 ;; (list x y z)
+
+(defvar *cache* (make-hash-table))
+(defvar *world* '((a . 2) (b . 16)))
+(defun retrieve (key)
+  (multiple-value-bind (x y) (gethash key *cache*)
+    (if y
+        (values x y)
+        (cdr (assoc key *world*)))))
+
+(defsetf retrieve (key) (val)
+  `(setf (gethash ,key *cache*) ,val))
+
+(retrieve 'a)
+(setf (retrieve 'a) 22)
