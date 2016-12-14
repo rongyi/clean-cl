@@ -30,3 +30,19 @@
 
 ;; (funcall (fn (and integerp oddp)) 7)
 ;; (testmacro (fn (and integerp oddp)))
+
+;; (funcall  (fn (compose list 1+ truncate)) 3.7)
+
+;; (testmacro (fn (compose list 1+ truncate)))
+
+;; (mapcar (fn (and integerp oddp))
+;;         '(c 3 p 0))
+;; (mapcar (fn (or integerp symbolp))
+;;         '(c 3 p 0.2))
+
+;; (map1-n (fn (if oddp 1+ identity))
+;;         6)
+
+;; (testmacro (fn (list 1- identity 1+)))
+;; (mapcar (fn (list 1- identity 1+))
+;;         '(1 2 3))
