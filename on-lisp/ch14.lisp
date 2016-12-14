@@ -38,3 +38,21 @@
                (let ((it ,sym))
                  ,@(cdr cl1))
                (acond ,@(cdr clauses)))))))
+
+;; we can't express a recursive function with a simple lambda-expression.
+(defun count-instance (obj lists)
+  (labels ((instances-in (lst)
+             (if lst
+                 (+ (if (eq (car lst) obj) 1 0)
+                    (instances-in (cdr lst)))
+                 0)))
+    (mapcar #'instances-in lists)))
+
+;; (count-instance 'a '((a b c) (a b c d e) (a a a a a)))
+
+(defmacro alambda (parms &body body)
+  `(labels ((self ,parms ,@body))
+     #'self))
+
+;; (funcall (alambda (x) (if (= x 0) 1 (* x (self (1- x)))))
+;;           3)
