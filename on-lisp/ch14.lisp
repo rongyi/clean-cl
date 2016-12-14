@@ -98,7 +98,7 @@
 ;; return list
 ;; (member-if #'null '(2 nil 6))
 
-;; return multiple values
+;; return multiple values, this is the cleanest which is also taken by Go lang designer
 ;; (setf edible (make-hash-table)
 ;;       (gethash 'olive-oil edible) t
 ;;       (gethash 'motor-oil edible) nil)
@@ -109,4 +109,20 @@
     (if find?
         (if val 'yes 'no)
         'maybe)))
+;; (mapcar #'edible? '(motor-oil olive-oil iguana))
+
+;; Common Lisp supports yet a third way of indicating failure: to have the access function
+;; take as an argument a special object, presumably a gensym
+;; (get 'life 'meaning (gensym))
+
+(defmacro aif2 (test &optional then else)
+  (let ((win (gensym)))
+    `(multiple-value-bind (it ,win) ,test
+       (if (or it ,win) ,then ,else))))
+
+;; (defun edible? (x)
+;;   (aif2 (gethash x edible)
+;;         (if it 'yes 'no)
+;;         'maybe))
+
 ;; (mapcar #'edible? '(motor-oil olive-oil iguana))
