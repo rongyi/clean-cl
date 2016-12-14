@@ -126,3 +126,27 @@
 ;;         'maybe))
 
 ;; (mapcar #'edible? '(motor-oil olive-oil iguana))
+
+(defmacro awhen2 (test &body body)
+  `(aif2 ,test
+         (progn ,@body)))
+
+(defmacro awhile2 (test &body body)
+  (let ((flag (gensym)))
+    `(let ((,flag t))
+       (while ,flag
+         (aif2 ,test
+               (progn ,@body)
+               (setq ,flag nil))))))
+
+(defmacro acond2 (&rest clauses)
+  (if (null clauses)
+      nil
+      (let ((cl1 (car clauses))
+            (val (gensym))
+            (win (gensym)))
+        `(multiple-value-bind (,val ,win) ,(car cl1)
+           (if (or ,val ,win)
+               (let ((it ,val))
+                 ,@(cdr cl1))
+               (acond2 ,@(cdr clauses)))))))
