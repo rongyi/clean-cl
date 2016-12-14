@@ -56,3 +56,13 @@
 
 ;; (funcall (alambda (x) (if (= x 0) 1 (* x (self (1- x)))))
 ;;           3)
+
+(defun count-instance (obj lists)
+  (mapcar (alambda (lst)
+            (if lst
+                (+ (if (eq (car lst) obj) 1 0)
+                   (self (cdr lst)))
+                0))
+          lists))
+
+;; (count-instance 'a '((a b c d) (a a a a)))
