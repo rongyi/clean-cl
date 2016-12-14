@@ -50,3 +50,21 @@
 ;; (remove-if (fn (or (and integerp oddp)
 ;;                    (and consp cdr)))
 ;;            '(1 (a b) c (d) 2 3.4 (e f g)))
+
+;; (defmacro alrec (rec &optional base)
+;;   "cltl1 version"
+;;   (let ((gfn (gensym)))
+;;     `(lrec #'(lambda (it ,gfn)
+;;                (labels ((rec () (funcall ,gfn)))
+;;                  ,rec))
+;;            ,base)))
+
+(defmacro alrec (rec &optional base)
+  "cltl2 version"
+  (let ((gfn (gensym)))
+    `(lrec #'(lambda (it ,gfn)
+               (symbol-macrolet ((rec (funcall ,gfn)))
+                 ,rec))
+           ,base)))
+
+;; (funcall (alrec (and (oddp it) rec) t) '(1 3 5))

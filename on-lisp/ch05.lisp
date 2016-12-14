@@ -143,7 +143,7 @@
 (funcall (lrec #'(lambda (x f)
                    (adjoin x
                            (funcall f))))
-         '(1 2 3))
+         '(1 2 3 3))
 
 ;; findif
 (funcall (lrec #'(lambda (x f)
