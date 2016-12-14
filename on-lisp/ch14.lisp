@@ -91,11 +91,14 @@
 ;; 3. function return nil to indicate failure
 ;; (find-if #'oddp '(2 4 6))
 
+;; return assoc
 ;; (setq synonyms '((yes . t) (no . nil)))
 ;; (assoc 'no synonyms)
 
+;; return list
 ;; (member-if #'null '(2 nil 6))
 
+;; return multiple values
 ;; (setf edible (make-hash-table)
 ;;       (gethash 'olive-oil edible) t
 ;;       (gethash 'motor-oil edible) nil)
