@@ -68,3 +68,17 @@
            ,base)))
 
 ;; (funcall (alrec (and (oddp it) rec) t) '(1 3 5))
+;; (testmacro (alrec (and (oddp it) rec) t))
+
+(defmacro on-cdrs (rec base &rest lsts)
+  `(funcall (alrec ,rec #'(lambda () ,base)) ,@lsts))
+
+(defun our-length (lst)
+  (on-cdrs (1+ rec) 0 lst))
+
+;; (our-length '(1 2 3))
+
+(defun our-every (fn lst)
+  (on-cdrs (and (funcall fn it) rec) t lst))
+
+;; (our-every #'oddp '(1 3 3))
