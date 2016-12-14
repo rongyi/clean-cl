@@ -122,3 +122,19 @@
              (cdr args))))
 
 ;; (maxmin '(1 2 3))
+(defmacro atrec (rec &optional (base 'it))
+  "cltl2 version"
+  (let ((lfn (gensym))
+        (rfn (gensym)))
+    `(trec #'(lambda (it ,lfn ,rfn)
+               (symbol-macrolet ((left (funcall ,lfn))
+                                 (right (funcall ,rfn)))
+                 ,rec))
+           #'(lambda (it) ,base))))
+
+(defmacro on-trees (rec base &rest trees)
+  `(funcall (atrec ,rec ,base) ,@trees))
+
+;; (funcall (atrec (cons left right)) '((a b c)))
+;; (testmacro (atrec (cons left right)))
+;; (funcall (atrec (or left right) (and (oddp it) it) ) '((1 2 3) 1))
