@@ -66,3 +66,44 @@
           lists))
 
 ;; (count-instance 'a '((a b c d) (a a a a)))
+
+(defmacro ablock (tag &rest args)
+  `(block ,tag
+     ,(funcall (alambda (args)
+                 (case (length args)
+                   (0 nil)
+                   (1 (car args))
+                   (t `(let ((it ,(car args)))
+                         ,(self (cdr args))))))
+               args)))
+
+;; (ablock t
+;;         (princ "ho ")
+;;         (princ it)
+;;         (princ it)
+;;         (return-from t))
+
+;; In Common Lisp the symbol nil has at least three different jobs:
+;; 1. empty list
+;; (cdr '(a))
+;; 2. represent falsity
+;; (= 1 0)
+;; 3. function return nil to indicate failure
+;; (find-if #'oddp '(2 4 6))
+
+;; (setq synonyms '((yes . t) (no . nil)))
+;; (assoc 'no synonyms)
+
+;; (member-if #'null '(2 nil 6))
+
+;; (setf edible (make-hash-table)
+;;       (gethash 'olive-oil edible) t
+;;       (gethash 'motor-oil edible) nil)
+;; (gethash 'motor-oil edible)
+
+(defun edible? (x)
+  (multiple-value-bind (val find?) (gethash x edible)
+    (if find?
+        (if val 'yes 'no)
+        'maybe)))
+;; (mapcar #'edible? '(motor-oil olive-oil iguana))
