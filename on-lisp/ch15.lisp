@@ -98,3 +98,27 @@
   (on-cdrs (or (funcall fn it) rec) nil lst))
 
 ;; (our-some #'oddp '(1 2 3))
+;; (union '(a b) (union '(b c) '(c d)))
+(defun unions (&rest sets)
+  (on-cdrs (union it rec) (car sets) (cdr sets)))
+
+;; (testmacro (unions '(a b) '(c d)))
+
+;; (unions '(a b) '(c d) '(e d))
+(defun intersections (&rest sets)
+  (unless (some #'null sets)
+    (on-cdrs (intersection it rec)
+             (car sets)
+             (cdr sets))))
+
+(defun differences (set &rest outs)
+  (on-cdrs (set-difference rec it) set outs))
+
+(defun maxmin (args)
+  (when args
+    (on-cdrs (multiple-value-bind (mx mn) rec
+               (values (max mx it) (min mn it)))
+             (values (car args) (car args))
+             (cdr args))))
+
+;; (maxmin '(1 2 3))
