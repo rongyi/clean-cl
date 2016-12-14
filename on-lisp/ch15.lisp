@@ -46,3 +46,7 @@
 ;; (testmacro (fn (list 1- identity 1+)))
 ;; (mapcar (fn (list 1- identity 1+))
 ;;         '(1 2 3))
+
+;; (remove-if (fn (or (and integerp oddp)
+;;                    (and consp cdr)))
+;;            '(1 (a b) c (d) 2 3.4 (e f g)))
