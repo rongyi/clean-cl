@@ -150,3 +150,20 @@
                (let ((it ,val))
                  ,@(cdr cl1))
                (acond2 ,@(cdr clauses)))))))
+
+;; Referential Transparency:
+;; A language is referentially transparent if:
+;; (a) every subexpression can be replaced by any other that's equal to it in value
+;; (b) all occurrences of an expression within a given context yield the samve value.
+
+(let ((g (gensym)))
+  (defun read2 (&optional (str *standard-input*))
+    (let ((val (read str nil g)))
+      (unless (equal val g)
+        (values val t)))))
+
+(defmacro do-file (filenames &body body)
+  (let ((str (gensym)))
+    `(with-open-file (,str ,filenames)
+       (awhile2 (read2 ,str)
+         ,@body))))
