@@ -82,3 +82,19 @@
   (on-cdrs (and (funcall fn it) rec) t lst))
 
 ;; (our-every #'oddp '(1 3 3))
+
+(defun our-copy-list (lst)
+  (on-cdrs (cons it rec) nil lst))
+;; (our-copy-list '(a 1 3))
+
+(defun our-remove-duplicates (lst)
+  (on-cdrs (adjoin it rec) nil lst))
+;; (our-remove-duplicates '(a a a b))
+(defun our-find-if (fn lst)
+  (on-cdrs (if (funcall fn it) it rec) nil lst))
+
+;; (our-find-if #'oddp '(1 2 3))
+(defun our-some (fn lst)
+  (on-cdrs (or (funcall fn it) rec) nil lst))
+
+;; (our-some #'oddp '(1 2 3))
