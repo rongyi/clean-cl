@@ -138,3 +138,16 @@
 ;; (funcall (atrec (cons left right)) '((a b c)))
 ;; (testmacro (atrec (cons left right)))
 ;; (funcall (atrec (or left right) (and (oddp it) it) ) '((1 2 3) 1))
+
+(defun our-copy-list (tree)
+  (on-trees (cons left right) it tree))
+(defun count-leaves (tree)
+  (on-trees (+ left (or right 1)) 1 tree))
+
+(defun flatten (tree)
+  (on-trees (nconc left right) (mklist it) tree))
+
+(defun rfind-if (fn tree)
+  (on-trees (or left right)
+            (and (funcall fn it) it)
+            tree))
