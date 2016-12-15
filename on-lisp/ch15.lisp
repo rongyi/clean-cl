@@ -151,3 +151,25 @@
   (on-trees (or left right)
             (and (funcall fn it) it)
             tree))
+
+(defconstant unforced (gensym))
+(defstruct delay forced closure)
+
+(defmacro delay (expr)
+  (let ((self (gensym)))
+    `(let ((,self (make-delay :forced unforced)))
+       (setf (delay-closure ,self)
+             #'(lambda ()
+                 (setf (delay-forced ,self) ,expr)))
+       ,self)))
+
+(defun force (x)
+  (if (delay-p x)
+      (if (eq (delay-forced x) unforced)
+          (funcall (delay-closure x))
+          (delay-forced x))
+      x))
+
+;; (let ((x 2))
+;;   (setq d (delay (1+ x)))
+;;   (force d))
