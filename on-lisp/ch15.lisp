@@ -152,6 +152,7 @@
             (and (funcall fn it) it)
             tree))
 
+;; lazy evaluation
 (defconstant unforced (gensym))
 (defstruct delay forced closure)
 
