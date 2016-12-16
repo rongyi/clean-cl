@@ -43,3 +43,26 @@
 
 ;; #[2 7] expand to
 ;; 2 3 4 5 6 7
+
+(defmacro defdelim (left right parms &body body)
+  `(ddfn ,left ,right #'(lambda ,parms ,@body)))
+
+(let ((rpar (get-macro-character #\) )))
+  (defun ddfn (left right fn)
+    (set-macro-character right rpar)
+    (set-dispatch-macro-character #\# left
+                                  #'(lambda (stream char1 char2)
+                                      (apply fn
+                                             (read-delimited-list right stream t))))))
+
+(defdelim #\[ #\] (x y)
+  (list 'quote (mapa-b #'identity (ceiling x) (floor y))))
+
+;; (let ((f1 (compose #'list #'1+))
+;;       (f2 #'(lambda (x) (list (1+ x)))))
+;;   (equal (funcall f1 7) (funcall f2 7)))
+
+(defdelim #\{ #\} (&rest args)
+  `(fn (compose ,@args)))
+
+;; (funcall #{list 1+} 7)
