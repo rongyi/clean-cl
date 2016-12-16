@@ -10,3 +10,13 @@
 ;; character is encountered.
 
 ;; You can change the function associated with an existing macro character, or define new macro characters of your own.
+
+;; One of the oldest read-macros in Lisp is ', you could do without ' by always writing (quote a) instead of 'a
+
+;; ' implementation
+(set-macro-character #\'
+                     #'(lambda (stream char)
+                         (list 'quote (read stream t nil t))))
+
+;; Macros get hold of the program when it has already been parsed into Lisp objects by the reader,
+;; and read-macros operate on a program while it is still text.
