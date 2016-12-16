@@ -20,3 +20,23 @@
 
 ;; Macros get hold of the program when it has already been parsed into Lisp objects by the reader,
 ;; and read-macros operate on a program while it is still text.
+
+(set-dispatch-macro-character #\# #\?
+                              #'(lambda (stream cha1 char2)
+                                  `#'(lambda (&rest ,(gensym))
+                                       ,(read stream t nil t))))
+
+;; (mapcar #?2 '(a b c))
+;; (eq (funcall #?'a) 'a)
+;; (eq (funcall #?#'oddp) (symbol-function 'oddp))
+
+(set-macro-character #\] (get-macro-character #\) ))
+
+(set-dispatch-macro-character #\# #\[
+                              #'(lambda (stream cha1 cha2)
+                                  (let ((accum nil)
+                                        (pair (read-delimited-list #\] stream t)))
+                                    (do ((i (ceiling (car pair)) (1+ i)))
+                                        ((> i (floor (cadr pair)))
+                                         (list 'quote (nreverse accum)))
+                                      (push i accum)))))
