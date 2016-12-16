@@ -40,3 +40,6 @@
                                         ((> i (floor (cadr pair)))
                                          (list 'quote (nreverse accum)))
                                       (push i accum)))))
+
+;; #[2 7] expand to
+;; 2 3 4 5 6 7
