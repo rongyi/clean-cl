@@ -72,3 +72,8 @@
 ;;               (d e f)
 ;;               (g h i)) ar
 ;;   (list a b c d e f g h i))
+
+;; sparse condition
+;; (with-array ((a 0 0) (d 1 1) (i 2 2))
+;;     ar
+;;   (values a d i))
