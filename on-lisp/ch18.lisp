@@ -77,3 +77,18 @@
 ;; (with-array ((a 0 0) (d 1 1) (i 2 2))
 ;;     ar
 ;;   (values a d i))
+
+(defmacro with-struct ((name . fields) struct &body body)
+  (let ((gs (gensym)))
+    `(let ((,gs ,struct))
+       (let ,(mapcar #'(lambda (f)
+                         `(,f (,(symb name f) ,gs)))
+                     fields)
+         ,@body))))
+
+;; (defstruct visitor name title firm)
+;; (setq theo (make-visitor :name "Theodebert"
+;;                          :title 'king
+;;                          :firm 'franks))
+;; (with-struct (visitor- name firm title) theo
+;;   (list name firm title))
