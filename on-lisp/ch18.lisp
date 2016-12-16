@@ -21,5 +21,21 @@
                           rec))))))))
 
 ;; (destruc '(a b c) 'seq #'atom)
+;; (destruc '(a (b . c) &rest d) 'seq)
+
+(defun dbind-ex (binds body)
+  (if (null binds)
+      `(progn ,@body)
+      `(let ,(mapcar #'(lambda (b)
+                         (if (consp (car b))
+                             (car b)
+                             b))
+                     binds)
+         ,(dbind-ex (mapcan #'(lambda (b)
+                                (if (consp (car b))
+                                    (cdr b)))
+                            binds)
+                    body))))
 
 ;; (destruc '(a (b . c) &rest d) 'seq)
+;; (dbind-ex (destruc '(a (b . c) &rest d) 'seq) '(body))
