@@ -150,3 +150,26 @@
 
 ;; (match '(p ?x b ?y a) '(p ?y b c a))
 ;; (match '(a b c) '(a a a))
+
+(defmacro if-match (pat seq then &optional else)
+  `(aif2 (match ',pat ,seq)
+         (let ,(mapcar #'(lambda (v)
+                           `(,v (binding ',v it)))
+                       (vars-in then #'atom))
+           ,then)
+         ,else))
+
+(defun var? (x)
+  (and (symbolp x) (eq (char (symbol-name x) 0) #\?)))
+(defun vars-in (expr &optional (atom? #'atom))
+  (if (funcall atom? expr)
+      (if (var? expr) (list expr))
+      (union (vars-in (car expr) atom?)
+             (vars-in (cdr expr) atom?))))
+
+(defun abab (seq)
+  (if-match (?x ?y ?x ?y) seq
+            (values ?x ?y)
+            nil))
+
+;; (abab '(hi ho hi ho))
