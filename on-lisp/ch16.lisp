@@ -2,8 +2,8 @@
 ;; Fortunately, in a language like Lisp you don't have to live with all the decisions of the designers.
 
 
-;; (defmacro dbind (&rest args)
-;;   `(destructuring-bind ,@args))
+(defmacro dbind (&rest args)
+  `(destructuring-bind ,@args))
 
 ;; (defmacro mvbind (&rest args)
 ;;   `(multiple-value-bind ,@args))
