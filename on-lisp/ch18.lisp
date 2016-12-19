@@ -232,3 +232,6 @@
 
 ;; (let ((n 3))
 ;;   (if-match (?x n 'n '(a b)) '(1 3 n (a b)) ?x))
+
+;; (if-match (?x (1 . ?y) . ?x) '((a b) #(1 2 3) a b)
+;;           (values ?x ?y))
