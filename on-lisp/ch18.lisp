@@ -90,6 +90,7 @@
 ;; (setq theo (make-visitor :name "Theodebert"
 ;;                          :title 'king
 ;;                          :firm 'franks))
+;; (visitor-name theo)
 ;; (with-struct (visitor- name firm title) theo
 ;;   (list name firm title))
 

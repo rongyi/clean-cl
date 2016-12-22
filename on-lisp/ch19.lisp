@@ -109,8 +109,9 @@
 
 (setq my-favorite-year 1723)
 
-(with-answer (dates ?x my-favorite-year ?d)
-             (format t "~A was born in my favorite year. ~%" ?x))
+;; to run this code load 18 15 14 10 4 chapter source code, oh my!
+;; (with-answer (dates ?x my-favorite-year ?d)
+;;              (format t "~A was born in my favorite year. ~%" ?x))
 
-(macroexpand (with-answer (dates ?x my-favorite-year ?d)
-             (format t "~A was born in my favorite year. ~%" ?x)))
+;; (macroexpand (with-answer (dates ?x my-favorite-year ?d)
+;;              (format t "~A was born in my favorite year. ~%" ?x)))
