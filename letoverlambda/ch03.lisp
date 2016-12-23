@@ -150,6 +150,7 @@
 
 (set-dispatch-macro-character #\# #\" #'|#"-reader|)
 
+;; test in *REAL* repl, not in slime, in slime, there is an error
 (defun |#>-reader| (stream sub-char numarg)
   (declare (ignore sub-char numarg))
   (let ((chars))
