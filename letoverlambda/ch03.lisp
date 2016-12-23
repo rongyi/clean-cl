@@ -130,3 +130,7 @@
 
 ;; (let ((s '(b c d)))
 ;;   `(a ,@s e))
+
+(defvar to-splice '(b c d))
+;; evaluate twice
+;; `(a ,.to-splice e)
