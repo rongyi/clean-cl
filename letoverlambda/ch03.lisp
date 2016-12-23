@@ -110,17 +110,17 @@
 
 ;; (testmacro (square (incf x)))
 
-'(football-game
-  (game-started-at
-   #.(get-internal-real-time))
-  (coin-flip
-   #.(if (zerop (random 2)) 'heads 'tails)))
+;; '(football-game
+;;   (game-started-at
+;;    #.(get-internal-real-time))
+;;   (coin-flip
+;;    #.(if (zerop (random 2)) 'heads 'tails)))
 
-`(football-game
-  (game-started-at
-   ,(get-internal-real-time))
-  (coin-flip
-   ,(if (zerop (random 2)) 'heads 'tails)))
+;; `(football-game
+;;   (game-started-at
+;;    ,(get-internal-real-time))
+;;   (coin-flip
+;;    ,(if (zerop (random 2)) 'heads 'tails)))
 
 ;; chapter 4
 ;; '`q
@@ -131,6 +131,10 @@
 ;; (let ((s '(b c d)))
 ;;   `(a ,@s e))
 
-(defvar to-splice '(b c d))
+;; (defvar to-splice '(b c d))
 ;; evaluate twice
 ;; `(a ,.to-splice e)
+
+(let ((let '`(let ((let ',let))
+               ,let)))
+  `(let ((let ',let)) ,let))
