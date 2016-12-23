@@ -177,3 +177,6 @@
 
 (set-dispatch-macro-character
  #\# #\> #'|#>-reader|)
+
+
+;; (nthcdr 3 '(fail another string for))
