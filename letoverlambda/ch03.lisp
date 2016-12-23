@@ -68,3 +68,30 @@
 ;; from now on all the source code will be put to one file!!!
 (defmacro testmacro (expr)
   `(pprint (macroexpand-1 ',expr)))
+
+
+(defun o!-symbol-p (s)
+  (and (symbolp s)
+       (> (length (symbol-name s)) 2)
+       (string= (symbol-name s)
+                "O!"
+                :start1 0
+                :end1 2)))
+
+(defun mkstr (&rest args)
+  (with-output-to-string (s)
+    (dolist (a args)
+      (princ a s))))
+
+;; (mkstr pi "sdfasdf" 'pi)
+(defun symb (&rest args)
+  (values (intern (apply #'mkstr args))))
+
+;; (symb 'make 'str)
+
+(defun o!-symbol-to-g!-symbol (s)
+  (symb "G!"
+        (subseq (symbol-name s) 2)))
+
+;; (o!-symbol-to-g!-symbol 'O!MyGod)
+;; (symbol-name 'name)
