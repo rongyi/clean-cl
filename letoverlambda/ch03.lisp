@@ -95,3 +95,17 @@
 
 ;; (o!-symbol-to-g!-symbol 'O!MyGod)
 ;; (symbol-name 'name)
+
+(defmacro defmacro! (name args &rest body)
+  (let* ((os (remove-if-not #'o!-symbol-p args))
+         (gs (mapcar #'o!-symbol-to-g!-symbol os)))
+    `(defmacro/g! ,name ,args
+       `(let ,(mapcar #'list (list ,@gs) (list ,@os))
+          ,(progn ,@body)))))
+
+;; (mapcar #'list '(a b c) '(d e f))
+
+;; (defmacro! square (o!x)
+;;   `(* ,g!x ,g!x))
+
+;; (testmacro (square (incf x)))
