@@ -191,3 +191,48 @@
           (push curr chars))
         (cons (coerce (nreverse chars) 'string)
               (segment-reader stream ch (- n 1))))))
+
+#+cl-ppcre
+(defmacro! match-mode-ppcre-lambda-form (o!args)
+  ``(lambda (,',g!str)
+      (cl-ppcre:scan
+       ,(car ,g!args)
+       ,',g!str)))
+
+#+cl-ppcre
+(defmacro! subst-mode-ppcre-lambda-form (o!args)
+  ``(lambda (,',g!str)
+      (cl-ppcre:regex-replace-all
+       ,(car ,g!args)
+       ,',g!str
+       ,(cadr ,g!args))))
+
+#+cl-ppcre
+(defun |#~-reader| (stream sub-char numarg)
+  (declare (ignore sub-char numarg))
+  (let ((mode-char (read-char stream)))
+    (cond
+      ((char= mode-char #\m)
+       (match-mode-ppcre-lambda-form
+        (segment-reader stream
+                        (read-char stream)
+                        1)))
+      ((char= mode-char #\s)
+       (subst-mode-ppcre-lambda-form
+        (segment-reader stream
+                        (read-char stream)
+                        2)))
+      (t (error "Unkown #~~ mode character")))))
+
+#+cl-ppcre
+(set-dispatch-macro-character #\# #\~ #'|#~-reader|)
+
+;; to evaluate this form
+;; 1. first download cl-ppcre package
+;; sbcl contain asdf
+;; 2. (require "asdf")
+;; 3. (load "/tmp/cl-ppcre-2.0.11/cl-ppcre.asd")
+;; 4. (asdf:load-system :cl-ppcre)
+
+;; (funcall #~s/abc/def/ "test abc testing abc")
+;; (funcall #~m/abc/ "123abc")
