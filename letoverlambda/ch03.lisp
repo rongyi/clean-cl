@@ -262,6 +262,7 @@
 
 ;; (unit-of-timne 10 h)
 
+;; nochaining version
 (defmacro! defunits% (quantity base-unit &rest units)
   `(defmacro ,(symb 'unit-of- quantity) (,g!val ,g!un)
      `(* ,,g!val
@@ -271,7 +272,11 @@
                         `((,(car x)) ,(cadr x)))
                       (group units 2))))))
 
+;; (defunits% time s m 60 h 3600)
+;; (unit-of-timne 1 h)
 
+
+;; now we add chaning
 (defun defunits-chaining% (u units)
   (let ((spec (find u units :key #'car)))
     (if (null spec)
@@ -284,6 +289,19 @@
                      units))
               chain)))))
 
-(defunits-chaining% 'h '((s 1) (m 60) (h (60 m))))
+;; (find 'h '((s 1) (m 60) (h (m 60))) :key #'car)
+;; (defunits-chaining% 'h '((s 1) (m 60) (h (60 m))))
 
-(find 'h '((s 1) (m 60) (h (m 60))) :key #'car)
+;; chaning version
+(defmacro! defunits%% (quantity base-unit &rest units)
+  `(defmacro ,(symb 'unit-of- quantity) (,g!val ,g!un)
+     `(* ,,g!val
+         ,(case ,g!un
+            ((,base-unit) 1)
+            ,@(mapcar (lambda (x)
+                        `((,(car x))
+                          ,(defunits-chaining%
+                               (car x)
+                               (cons `(,base-unit 1)
+                                     (group units 2)))))
+                      (group units 2))))))
