@@ -403,3 +403,59 @@
 ;;  '(1 2 (3 4 (5 . 6)))
 ;;  (and (numberp x) (evenp x))
 ;;  'even-number)
+
+(defmacro cxr% (x tree)
+  (if (null x)
+      tree
+      `(,(cond
+           ((eq 'a (cadr x)) 'car)
+           ((eq 'd (cadr x)) 'cdr)
+           (t (error "Non A/D symbol")))
+         ,(if (= 1 (car x))
+              `(cxr% ,(cddr x) ,tree)
+              `(cxr% ,(cons (- (car x) 1) (cdr x))
+                     ,tree)))))
+
+;; (macroexpand '(cxr% (1 a 2 d) '(1 2 3 4 5)))
+;; (cxr% (2 a 10 d) '(1 2 3 4 5))
+
+(format nil "~r" 109887)
+
+
+(defun cxr-symbol-p (s)
+  (if (symbolp s)
+      (let ((chars (coerce (symbol-name s) 'list)))
+        (and
+         (< 6 (length chars))
+         (char= #\C (car chars))
+         (char= #\R (car (last chars)))
+         (null (remove-if
+                #'(lambda (c)
+                    (or (char= c #\A)
+                        (char= c #\D)))
+                (cdr (butlast chars))))))))
+
+;; (cxr-symbol-p 'cadadadaadadr)
+
+;; (length (coerce (symbol-name 'cadadadaadadr) 'list))
+
+(defun cxr-symbol-to-cxr-list (s)
+  (labels ((collect (l)
+             (if l
+                 (list* 1
+                        (if (char= (car l) #\A)
+                            'A
+                            'D)
+                        (collect (cdr l))))))
+    (collect (cdr (butlast (coerce (symbol-name s) 'list))))))
+
+(defmacro with-all-cxrs (&rest forms)
+  `(labels (,@(mapcar (lambda (s)
+                        `(,s (l)
+                             (cxr% ,(cxr-symbol-to-cxr-list s)
+                                   l)))
+                      (remove-duplicates (remove-if-not #'cxr-symbol-p (flatten forms)))))
+     ,@forms))
+
+;; (with-all-cxrs (cons (cadadadr '(1 2 3))
+;;                      (caaaaaaar '(4 5 6))))
