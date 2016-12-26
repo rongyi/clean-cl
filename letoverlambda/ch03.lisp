@@ -379,10 +379,27 @@
                  'even-number))
 
 ;; so wen can tell compiler explicitly
-(tree-leaves%% '(1 2 (3 4 (5 6)))
-               (lambda (x)
-                 (declare (ignorable x))
-                 (and (numberp x) (evenp x)))
-               (lambda (x)              ;the x here is not used
-                 (declare (ignorable x))
-                 'even-number))
+;; (tree-leaves%% '(1 2 (3 4 (5 6)))
+;;                (lambda (x)
+;;                  (declare (ignorable x))
+;;                  (and (numberp x) (evenp x)))
+;;                (lambda (x)              ;the x here is not used
+;;                  (declare (ignorable x))
+;;                  'even-number))
+
+;; simple wrapper
+(defmacro tree-leaves (tree test result)
+  `(tree-leaves%%
+    ,tree
+    (lambda (x)
+      (declare (ignorable x))
+      ,test)
+    (lambda (x)
+      (declare (ignorable x))
+      ,result)))
+
+;; simple wrapper
+;; (tree-leaves
+;;  '(1 2 (3 4 (5 . 6)))
+;;  (and (numberp x) (evenp x))
+;;  'even-number)
