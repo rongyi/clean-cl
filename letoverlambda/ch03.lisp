@@ -236,3 +236,17 @@
 
 ;; (funcall #~s/abc/def/ "test abc testing abc")
 ;; (funcall #~m/abc/ "123abc")
+
+
+(defmacro unit-of-timne (value unit)
+  `(* ,value
+      ,(case unit
+         ((s) 1)
+         ((m) 60)
+         ((h) 3600)
+         ((d) 86400)
+         ((ms) 1/1000)
+         ((us) 1/1000000))))
+;; (testmacro (unit-of-timne 10 h))
+
+;; (unit-of-timne 10 h)
