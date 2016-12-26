@@ -305,3 +305,18 @@
                                (cons `(,base-unit 1)
                                      (group units 2)))))
                       (group units 2))))))
+
+;; incase circle dependancy
+(defun defunits-chaining (u units prev)
+  (if (member u prev)
+      (error "~{ ~a~^ depends on ~}"
+             (cons u prev)))
+  (let ((spec (find u units :key #'car)))
+    (if (null spec)
+        (error "Unkown unit ~a" u)
+        (let ((chain (cadr spec)))
+          (if (listp chain)
+              (* (car chain) (defunits-chaining (cadr chain) units (cons u prev)))
+              chain)))))
+
+;; (defunits-chaining 'h '((s 1) (m (1/60 h)) (h (60 m))) nil)
