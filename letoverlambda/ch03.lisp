@@ -337,3 +337,52 @@
 
 ;; (defunits time s m 60 h (60 m))
 ;; (unit-of-time 1 h)
+
+(defun tree-leaves% (tree result)
+  (if tree
+      (if (listp tree)
+          (cons (tree-leaves% (car tree)
+                              result)
+                (tree-leaves% (cdr tree)
+                              result))
+          result)))
+
+;; (tree-leaves%
+;;  '(2 (nil t (a . b)))
+;;  'leaf)
+
+;; (sort '(5 1 2 4 3 8 9 6 7) #'<)
+
+(defun predicate-splitter (orderp splitp)
+  (lambda (a b)
+    (let ((s (funcall splitp a)))
+      (if (eq s (funcall splitp b))
+          (funcall orderp a b)
+          s))))
+
+;; (sort '(5 1 2 4 3 8 9 6 7)
+;;       (predicate-splitter #'< #'evenp))
+
+(defun tree-leaves%% (tree test result)
+  (if tree
+      (if (listp tree)
+          (cons (tree-leaves%% (car tree) test result)
+                (tree-leaves%% (cdr tree) test result))
+          (if (funcall test tree)
+              (funcall result tree)
+              tree))))
+
+(tree-leaves%% '(1 2 (3 4 (5 6)))
+               (lambda (x)
+                 (and (numberp x) (evenp x)))
+               (lambda (x)              ;the x here is not used
+                 'even-number))
+
+;; so wen can tell compiler explicitly
+(tree-leaves%% '(1 2 (3 4 (5 6)))
+               (lambda (x)
+                 (declare (ignorable x))
+                 (and (numberp x) (evenp x)))
+               (lambda (x)              ;the x here is not used
+                 (declare (ignorable x))
+                 'even-number))
