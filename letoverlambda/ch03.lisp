@@ -24,7 +24,18 @@
 ;; (funcall scanner "had")
 ;; (funcall scanner "jihad")
 ;; (funcall scanner "jihajihad")
-
+;; from on lisp
+(defun group (source n)
+  (if (zerop n)
+      (error "zero length"))
+  (labels ((rec (source acc)
+             (let ((rest (nthcdr n source)))
+               (if (consp rest)
+                   (rec rest (cons (subseq source 0 n) acc))
+                   (nreverse (cons source acc))))))
+    (if source
+        (rec source nil)
+        nil)))
 
 (defun flatten (x)
   (labels ((rec (x acc)
@@ -250,3 +261,29 @@
 ;; (testmacro (unit-of-timne 10 h))
 
 ;; (unit-of-timne 10 h)
+
+(defmacro! defunits% (quantity base-unit &rest units)
+  `(defmacro ,(symb 'unit-of- quantity) (,g!val ,g!un)
+     `(* ,,g!val
+         ,(case ,g!un
+            ((,base-unit) 1)
+            ,@(mapcar (lambda (x)
+                        `((,(car x)) ,(cadr x)))
+                      (group units 2))))))
+
+
+(defun defunits-chaining% (u units)
+  (let ((spec (find u units :key #'car)))
+    (if (null spec)
+        (error "Unkown unit ~a" u)
+        (let ((chain (cadr spec)))
+          (if (listp chain)
+              (* (car chain)
+                 (defunits-chaining%
+                     (cadr chain)
+                     units))
+              chain)))))
+
+(defunits-chaining% 'h '((s 1) (m 60) (h (60 m))))
+
+(find 'h '((s 1) (m 60) (h (m 60))) :key #'car)
