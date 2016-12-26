@@ -488,6 +488,6 @@
 
 ;; (count-test :inc)
 ;; (count-test :dec)
-(count-test :bound -10 100)
-(count-test :inc)
-(count-test :inc 1000)
+;; (count-test :bound -10 100)
+;; (count-test :inc)
+;; (count-test :inc 1000)
