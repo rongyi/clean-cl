@@ -477,8 +477,17 @@
 (setf (symbol-function 'count-test)
       (let ((count 0))
         (dlambda
-         (:inc () (incf count))
-         (:dec () (decf count)))))
+         (:inc (n) (incf count n))
+         (:dec (n) (decf count n))
+         (:reset () (setf count 0))
+         (:bound (lo hi)
+                 (setf count
+                       (min hi
+                            (max lo
+                                 count)))))))
 
 ;; (count-test :inc)
 ;; (count-test :dec)
+(count-test :bound -10 100)
+(count-test :inc)
+(count-test :inc 1000)
