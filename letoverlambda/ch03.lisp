@@ -459,3 +459,26 @@
 
 ;; (with-all-cxrs (cons (cadadadr '(1 2 3))
 ;;                      (caaaaaaar '(4 5 6))))
+
+(defmacro! dlambda (&rest ds)
+  `(lambda (&rest ,g!args)
+     (case (car ,g!args)
+       ,@(mapcar
+          (lambda (d)
+            `(,(if (eq t (car d))
+                   t
+                   (list (car d)))
+               (apply (lambda ,@(cdr d))
+                      ,(if (eq t (car d))
+                           g!args
+                           `(cdr ,g!args)))))
+          ds))))
+
+(setf (symbol-function 'count-test)
+      (let ((count 0))
+        (dlambda
+         (:inc () (incf count))
+         (:dec () (decf count)))))
+
+;; (count-test :inc)
+;; (count-test :dec)
