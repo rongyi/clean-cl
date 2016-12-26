@@ -320,3 +320,20 @@
               chain)))))
 
 ;; (defunits-chaining 'h '((s 1) (m (1/60 h)) (h (60 m))) nil)
+
+(defmacro! defunits (quantity base-unit &rest units)
+  `(defmacro ,(symb 'unit-of- quantity) (,g!val ,g!un)
+     `(* ,,g!val
+         ,(case ,g!un
+            ((,base-unit) 1)
+            ,@(mapcar (lambda (x)
+                        `((,(car x))
+                          ,(defunits-chaining
+                               (car x)
+                               (cons `(,base-unit 1)
+                                     (group units 2))
+                             nil)))
+                      (group units 2))))))
+
+;; (defunits time s m 60 h (60 m))
+;; (unit-of-time 1 h)
