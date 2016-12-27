@@ -563,3 +563,21 @@
      ,@(butlast body)
      (lambda (&rest params)
        (apply this params))))
+
+(defmacro alambda (params &body body)
+  `(labels ((self ,params ,@body))
+     #'self))
+
+(setf (symbol-function 'alet-test)  (alet ((acc 0))
+                                          (alambda (n)
+                                            (if (eq n 'invert)
+                                                (setq this
+                                                      (lambda (n)
+                                                        (if (eq n 'invert)
+                                                            (setq this #'self)
+                                                            (decf acc n))))
+                                                (incf acc n)))))
+
+
+;; (alet-test 10)
+;; (alet-test 'invert)
