@@ -510,6 +510,35 @@
 ;;           `(,a 'empty))
 ;;         '(a b c))
 
-;; using the new read macro
+;; using the new read macro, no lambda needed
 ;; (mapcar #`(,a1 'empty)
 ;;         '(a b c))
+
+(let ((vars '(a b c)))
+  (mapcar #2`(,a1 ',a2)
+          vars
+          (loop for v in vars
+             collect (gensym (symbol-name v)))))
+
+(defmacro alet% (letargs &rest body)
+  `(let ((this)
+         ,@letargs)
+     (setq this ,@(last body))
+     ,@(butlast body)
+     this))
+
+(setf  (symbol-function 'alet%-test)
+       (alet% ((sum) (mul) (expt))
+              (funcall this :reset)
+              (dlambda
+               (:reset ()
+                       (psetq sum 0
+                              nul 1
+                              expt 2))
+               (t (n)
+                  (psetq sum (+ sum n)
+                         mul (* nul n)
+                         expt (expt expt n))
+                  (list sum mul expt)))))
+;; (alet%-test 2)
+;; (alet%-test :reset)
