@@ -500,3 +500,11 @@
      ,(funcall (get-macro-character #\`) stream nil)))
 
 (set-dispatch-macro-character #\# #\` #'|#`-reader|)
+
+;; (mapcar (lambda (a)
+;;           (list a ''empty))
+;;         '(a b c))
+
+;; (mapcar (lambda (a)
+;;           `(,a 'empty))
+;;         '(a b c))
