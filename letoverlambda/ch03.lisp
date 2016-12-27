@@ -582,14 +582,12 @@
 ;; (alet-test 10)
 ;; (alet-test 'invert)
 
-# 此书主要讨论的Lisp的macro技巧，而作者在开篇就毫无保留地对Paul Graham的《On Lisp》充满了溢美之词，后面就开始就直接使用了On Lisp中的很多基础库(比如symb,flatten,group)，所以这本书的阅读顺序推荐放在On Lisp之后。
+;; 此书主要讨论的Lisp的macro技巧，而作者在开篇就毫无保留地对Paul Graham的《On Lisp》充满了溢美之词，后面就开始就直接使用了On Lisp中的很多基础库(比如symb,flatten,group)，所以这本书的阅读顺序推荐放在On Lisp之后。
 
-# 作者从Lisp最简单的let over lambda讲起，到后面的alet over alambdadlambda等等逐渐展开，渐渐的从小模块开始堆起，然后发现凑在一起的效果真是脑洞大开的那种感觉，原来代码还可以这么写。write program to program。国外的创业公司也有开始在后端部署Lisp[fn:1] Alan Perlis讲过： A language that doesn't affect the way you think about programming, is not worth knowing.[fn:2] 从这个角度来看Lisp绝对是值得学习的一门语言，像Inception那部电影： A dream in a dream讲述的那样，Lisp作为一门编程语言具有极其强悍的进化特性，引用此书的一句话： In other language you can walk north, south, east, and west, but lisp also gives you the option of going up。 Lisp开了一个新的维度，而打开这个维度的就是macro。
+;; 作者从Lisp最简单的let over lambda讲起，到后面的alet over alambdadlambda等等逐渐展开，渐渐的从小模块开始堆起，然后发现凑在一起的效果真是脑洞大开的那种感觉，原来代码还可以这么写。write program to program。国外的创业公司也有开始在后端部署Lisp[fn:1] Alan Perlis讲过： A language that doesn't affect the way you think about programming, is not worth knowing.[fn:2] 从这个角度来看Lisp绝对是值得学习的一门语言，像Inception那部电影： A dream in a dream讲述的那样，Lisp作为一门编程语言具有极其强悍的进化特性，引用此书的一句话： In other language you can walk north, south, east, and west, but lisp also gives you the option of going up。 Lisp开了一个新的维度，而打开这个维度的就是macro。
 
-# 书评的名称来自韩国电影新世界，这是从我跟人角度学习Lisp的最大体会。
+;; 书评的名称来自韩国电影新世界，这是从我跟人角度学习Lisp的最大体会。
 
-# * Footnotes
-
-# [fn:1] http://tech.grammarly.com/blog/posts/Running-Lisp-in-Production.html
-
-# [fn:2] http://pu.inf.uni-tuebingen.de/users/klaeren/epigrams.html
+;; * Footnotes
+;; [fn:1] http://tech.grammarly.com/blog/posts/Running-Lisp-in-Production.html
+;; [fn:2] http://pu.inf.uni-tuebingen.de/users/klaeren/epigrams.html
