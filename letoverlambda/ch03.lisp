@@ -505,6 +505,11 @@
 ;;           (list a ''empty))
 ;;         '(a b c))
 
+;; one level less quote
 ;; (mapcar (lambda (a)
 ;;           `(,a 'empty))
+;;         '(a b c))
+
+;; using the new read macro
+;; (mapcar #`(,a1 'empty)
 ;;         '(a b c))
