@@ -555,3 +555,11 @@
                          mul (* nul n)
                          expt (expt expt n))
                   (list sum mul expt))))
+
+;; with indirection
+(defmacro alet (letargs &rest body)
+  `(let ((this) ,@letargs)
+     (setq this ,@(last body))
+     ,@(butlast body)
+     (lambda (&rest params)
+       (apply this params))))
