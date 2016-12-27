@@ -542,3 +542,16 @@
                   (list sum mul expt)))))
 ;; (alet%-test 2)
 ;; (alet%-test :reset)
+;; (alet%-test 0.5)
+(alet% ((sum) (mul) (expt))
+              (funcall this :reset)
+              (dlambda
+               (:reset ()
+                       (psetq sum 0
+                              nul 1
+                              expt 2))
+               (t (n)
+                  (psetq sum (+ sum n)
+                         mul (* nul n)
+                         expt (expt expt n))
+                  (list sum mul expt))))
