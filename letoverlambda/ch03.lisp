@@ -638,4 +638,46 @@
             (lambda (n)
               (incf acc n)))
 ;; note the repl output
-(test-ichain 2)
+;; (test-ichain 2)
+
+(defmacro! ichain-after (&rest body)
+  `(let ((,g!indir-env this))
+     (setq this
+           (lambda (&rest ,g!temp-args)
+             (prog1
+                 (apply ,g!indir-env
+                        ,g!temp-args)
+               ,@body)))))
+
+(setf (symbol-function 'ichain-after-test)
+      (alet ((acc 0))
+            (ichain-before
+             (format t "Changing from ~a~%" acc))
+            (ichain-after
+             (format t "Changed to ~a~%" acc))
+            (lambda (n)
+              (incf acc n))))
+
+;; (ichain-after-test 2)
+
+(defmacro! ichain-intercept% (&rest body)
+  `(let ((,g!indir-env this))
+     (setq this
+           (lambda (&rest ,g!temp-args)
+             (block intercept
+               (prog1
+                   (apply ,g!indir-env
+                          ,g!temp-args)
+                 ,@body))))))
+
+(setf (symbol-function 'ichain-intercept-test)
+      (alet ((acc 0))
+            (ichain-intercept%
+             (when (< acc 0)
+               (format t "Acc went negative~%")
+               (setq acc 0)
+               (return-from intercept acc)))
+            (lambda (n)
+              (incf acc n))))
+
+(ichain-intercept-test 2)
