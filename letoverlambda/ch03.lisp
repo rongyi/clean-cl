@@ -607,3 +607,23 @@
                             (if (eq n 'invert)
                                 (state going-up)
                                 (decf acc n)))))
+
+
+(defmacro! ichain-before (&rest body)
+  `(let ((,g!indir-env this))
+     (setq this
+           (lambda (&rest ,g!temp-args)
+             ,@body
+             (apply ,g!indir-env
+                    ,g!temp-args)))))
+
+
+(setf (symbol-function 'test-ichain)
+      (alet ((acc 0))
+            (ichain-before
+             (format t "Changing from ~a~%" acc))
+            (lambda (n)
+              (incf acc n))))
+
+;; note the repl output
+;; (test-ichain 2)
