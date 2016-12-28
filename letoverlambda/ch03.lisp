@@ -695,3 +695,15 @@
                      (apply ,g!indir-env
                             ,g!temp-args)
                    ,@body)))))))
+
+(setf (symbol-function 'ichain-intercept-test)
+      (alet ((acc 0))
+            (ichain-intercept
+             (when (< acc 0)
+               (format t "Acc went negative~%")
+               (setq acc 0)
+               (intercept acc)))
+            (lambda (n)
+              (incf acc n))))
+
+;; (ichain-intercept-test -90)
