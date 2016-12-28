@@ -680,4 +680,18 @@
             (lambda (n)
               (incf acc n))))
 
-(ichain-intercept-test 2)
+;; (ichain-intercept-test 2)
+
+(defmacro! ichain-intercept (&rest body)
+  `(let ((,g!indir-env this))
+     (setq this
+           (lambda (&rest ,g!temp-args)
+             (block ,g!intercept
+               (macrolet ((intercept (v)
+                            `(return-from
+                              ,',g!intercept
+                               ,v)))
+                 (prog1
+                     (apply ,g!indir-env
+                            ,g!temp-args)
+                   ,@body)))))))
