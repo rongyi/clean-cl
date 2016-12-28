@@ -622,8 +622,20 @@
       (alet ((acc 0))
             (ichain-before
              (format t "Changing from ~a~%" acc))
+            (ichain-before
+             (format t "B~%"))
+            (ichain-before
+             (format t "C~%"))
+            (ichain-before
+             (format t "D~%"))
             (lambda (n)
               (incf acc n))))
 
+
+(alet ((acc 0))
+            (ichain-before
+             (format t "Changing from ~a~%" acc))
+            (lambda (n)
+              (incf acc n)))
 ;; note the repl output
-;; (test-ichain 2)
+(test-ichain 2)
