@@ -591,3 +591,19 @@
 ;; * Footnotes
 ;; [fn:1] http://tech.grammarly.com/blog/posts/Running-Lisp-in-Production.html
 ;; [fn:2] http://pu.inf.uni-tuebingen.de/users/klaeren/epigrams.html
+
+(defmacro alet-fsm (&rest states)
+  `(macrolet ((state (s)
+                `(setq this #',s)))
+     (labels (,@states) #',(caar states))))
+
+
+(alet ((acc 0))
+      (alet-fsm (going-up (n)
+                          (if (eq n 'invert)
+                              (state going-down)
+                              (incf acc n)))
+                (going-down (n)
+                            (if (eq n 'invert)
+                                (state going-up)
+                                (decf acc n)))))
