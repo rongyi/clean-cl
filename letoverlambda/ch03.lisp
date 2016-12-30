@@ -73,6 +73,8 @@
            ((zerop ,g!result) ,zero)
            (t ,neg))))
 
+;; (nif -1 'pos 'zero 'neg)
+
 ;; (let ((*print-circle* t))
 ;;   (print
 ;;    (macroexpand '(nif -1 'pos 'zero 'neg))))
