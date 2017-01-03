@@ -833,3 +833,12 @@
 ;; (pandoric-test :pandoric-set 'acc 1000)
 ;; now test again
 ;; (pandoric-test 3)
+;; (pandoric-test :pandoric-get 'this)
+
+(declaim (inline get-pandoric))
+(defun get-pandoric (box sym)
+  (funcall box :pandoric-get sym))
+(defsetf get-pandoric (box sym) (val)
+  `(progn
+     (funcall ,box :pandoric-set ,sym ,val)
+     ,val))
