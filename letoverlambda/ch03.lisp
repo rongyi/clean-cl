@@ -546,17 +546,17 @@
 ;; (alet%-test :reset)
 ;; (alet%-test 0.5)
 (alet% ((sum) (mul) (expt))
-              (funcall this :reset)
-              (dlambda
-               (:reset ()
-                       (psetq sum 0
-                              nul 1
-                              expt 2))
-               (t (n)
-                  (psetq sum (+ sum n)
-                         mul (* nul n)
-                         expt (expt expt n))
-                  (list sum mul expt))))
+       (funcall this :reset)
+       (dlambda
+        (:reset ()
+                (psetq sum 0
+                       nul 1
+                       expt 2))
+        (t (n)
+           (psetq sum (+ sum n)
+                  mul (* nul n)
+                  expt (expt expt n))
+           (list sum mul expt))))
 
 ;; with indirection
 (defmacro alet (letargs &rest body)
@@ -635,10 +635,10 @@
 
 
 (alet ((acc 0))
-            (ichain-before
-             (format t "Changing from ~a~%" acc))
-            (lambda (n)
-              (incf acc n)))
+      (ichain-before
+       (format t "Changing from ~a~%" acc))
+      (lambda (n)
+        (incf acc n)))
 ;; note the repl output
 ;; (test-ichain 2)
 
@@ -709,3 +709,44 @@
               (incf acc n))))
 
 ;; (ichain-intercept-test -90)
+(defmacro alet-hotpatch% (letargs &rest body)
+  `(let ((this) ,@letargs)
+     (setq this ,@(last body))
+     ,@(butlast body)
+     (lambda (&rest args)
+       (if (eq (car args) ':hotpatch)
+           (setq this (cadr args))
+           (apply this args)))))
+
+(setf (symbol-function 'hotpatch-test)
+      (alet-hotpatch% ((acc 0))
+                      (lambda (n)
+                        (incf acc n))))
+;; (hotpatch-test 1)
+;; (hotpatch-test :hotpatch
+;;                (let ((acc 0))
+;;                  (lambda (n)
+;;                    (incf acc (* 2 n)))))
+;; (hotpatch-test 2)
+
+
+(defmacro alet-hotpatch (letargs &rest body)
+  `(let ((this) ,@letargs)
+     (setq this ,@(last body))
+     ,@(butlast body)
+     (dlambda
+      (:hotpatch (closure)
+                 (setq this closure))
+      (t (&rest args)
+         (apply this args)))))
+
+;; (setf (symbol-function 'hotpatch-test)
+;;       (alet-hotpatch ((acc 0))
+;;                      (lambda (n)
+;;                        (incf acc n))))
+;; (hotpatch-test 1)
+;; (hotpatch-test :hotpatch
+;;                (let ((acc 0))
+;;                  (lambda (n)
+;;                    (incf acc (* 2 n)))))
+;; (hotpatch-test 2)
