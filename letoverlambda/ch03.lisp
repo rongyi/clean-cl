@@ -852,3 +852,10 @@
        (,@(mapcar #`(,a1 (get-pandoric ,g!box ',a1))
                   syms))
      ,@body))
+
+;; (with-pandoric (acc) #'pandoric-test
+;;                (format t "value of acc: ~a~%" acc))
+
+;; (with-pandoric (acc) #'pandoric-test
+;;                (setq acc 5))
+;; (pandoric-test 1)
