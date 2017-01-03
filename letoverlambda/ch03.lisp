@@ -889,7 +889,7 @@
 
 (defmacro plambda (largs pargs &rest body)
   (let ((pargs (mapcar #'list pargs)))
-    `(let ((this self))
+    `(let (this self)
        (setq
         this (lambda ,largs ,@body)
         self (dlambda
@@ -899,3 +899,16 @@
                              ,(pandoriclet-set pargs))
               (t (&rest args)
                  (apply this args)))))))
+
+
+(setf (symbol-function 'pantest)
+      (let ((a 0))
+        (let ((b 1))
+          (plambda (n) (a b)
+                   (incf a n)
+                   (setq b (* b n))))))
+;; (pantest 2)
+(defun pantest-peek ()
+  (with-pandoric (a b) #'pantest
+                 (format t "a=~a, b=~a~%" a b)))
+(pantest-peek)
