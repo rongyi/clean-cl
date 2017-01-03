@@ -859,3 +859,17 @@
 ;; (with-pandoric (acc) #'pandoric-test
 ;;                (setq acc 5))
 ;; (pandoric-test 1)
+
+(defun pandoric-hotpatch (box new)
+  (with-pandoric (this) box
+                 (setq this new)))
+
+(pandoric-test 0)
+(pandoric-hotpatch #'pandoric-test
+                   (let ((acc 100))
+                     (lambda (n)
+                       (decf acc n))))
+(pandoric-test 3)
+;; still the same
+(with-pandoric (acc) #'pandoric-test
+               acc)
