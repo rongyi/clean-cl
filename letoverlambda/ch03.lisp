@@ -908,7 +908,7 @@
                    (incf a n)
                    (setq b (* b n))))))
 ;; (pantest 2)
-(defun pantest-peek ()
-  (with-pandoric (a b) #'pantest
-                 (format t "a=~a, b=~a~%" a b)))
-(pantest-peek)
+;; (defun pantest-peek ()
+;;   (with-pandoric (a b) #'pantest
+;;                  (format t "a=~a, b=~a~%" a b)))
+;; (pantest-peek)
