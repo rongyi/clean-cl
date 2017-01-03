@@ -886,3 +886,16 @@
 ;; ;; the same now
 ;; (with-pandoric (acc) #'pandoric-test
 ;;                acc)
+
+(defmacro plambda (largs pargs &rest body)
+  (let ((pargs (mapcar #'list pargs)))
+    `(let ((this self))
+       (setq
+        this (lambda ,largs ,@body)
+        self (dlambda
+              (:pandoric-get (sym)
+                             ,(pandoriclet-get pargs))
+              (:pandoric-set (sym val)
+                             ,(pandoriclet-set pargs))
+              (t (&rest args)
+                 (apply this args)))))))
