@@ -842,3 +842,7 @@
   `(progn
      (funcall ,box :pandoric-set ,sym ,val)
      ,val))
+
+;; (get-pandoric #'pandoric-test 'acc)
+;; (setf (get-pandoric #'pandoric-test 'acc) -1000)
+;; (pandoric-test 3)
