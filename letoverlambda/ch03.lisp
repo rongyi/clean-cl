@@ -794,3 +794,42 @@
 (defmacro sublet* (bindings &rest body)
   `(sublet ,bindings
            ,@(mapcar #'macroexpand-1 body)))
+
+(defun pandoriclet-get (letargs)
+  `(case sym
+     ,@(mapcar #`((,(car a1)) ,(car a1))
+               letargs)
+     (t (error "Unkown pandoric get: ~a"
+               sym))))
+
+(defun pandoriclet-set (letargs)
+  `(case sym
+     ,@(mapcar #`((,(car a1))
+                  (setq ,(car a1) val))
+               letargs)
+     (t (error "Unkown pandoric set: ~a" sym val))))
+
+(defmacro pandoriclet (letargs &rest body)
+  (let ((letargs (cons '(this) (let-binding-transform letargs))))
+    `(let (,@letargs)
+       (setq this ,@(last body))
+       ,@(butlast body)
+       (dlambda
+        (:pandoric-get (sym)
+                       ,(pandoriclet-get letargs))
+        (:pandoric-set (sym val)
+                       ,(pandoriclet-set letargs))
+        (t (&rest args)
+           (apply this args))))))
+
+;; (setf (symbol-function 'pandoric-test)
+;;       (pandoriclet ((acc 0))
+;;                    (lambda (n)
+;;                      (incf acc n))))
+
+;; (pandoric-test 3)
+
+;; (pandoric-test :pandoric-get 'acc)
+;; (pandoric-test :pandoric-set 'acc 1000)
+;; now test again
+;; (pandoric-test 3)
