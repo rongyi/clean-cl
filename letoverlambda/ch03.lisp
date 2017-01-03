@@ -787,3 +787,10 @@
           body
           #1=(member x bindings :key #'cadr)
           (caar #1#)))))
+
+;; (sublet ((a 0))
+;;         (list a))
+
+(defmacro sublet* (bindings &rest body)
+  `(sublet ,bindings
+           ,@(mapcar #'macroexpand-1 body)))
