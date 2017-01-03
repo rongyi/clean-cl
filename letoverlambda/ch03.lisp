@@ -750,3 +750,15 @@
 ;;                  (lambda (n)
 ;;                    (incf acc (* 2 n)))))
 ;; (hotpatch-test 2)
+
+;; anaphor closing
+
+(defmacro! let-hotpatch (letargs &rest body)
+  `(let ((,g!this) ,@letargs)
+     (setq ,g!this ,@(last body))
+     ,@(butlast body)
+     (dlambda
+      (:hotpatch (closure)
+                 (setq ,g!this closure))
+      (t (&rest args)
+         (apply ,g!this args)))))
