@@ -864,12 +864,25 @@
   (with-pandoric (this) box
                  (setq this new)))
 
-(pandoric-test 0)
-(pandoric-hotpatch #'pandoric-test
-                   (let ((acc 100))
-                     (lambda (n)
-                       (decf acc n))))
-(pandoric-test 3)
-;; still the same
-(with-pandoric (acc) #'pandoric-test
-               acc)
+;; (pandoric-test 0)
+;; (pandoric-hotpatch #'pandoric-test
+;;                    (let ((acc 100))
+;;                      (lambda (n)
+;;                        (decf acc n))))
+;; (pandoric-test 3)
+;; ;; not the same!!!
+;; (with-pandoric (acc) #'pandoric-test
+;;                acc)
+
+;; (defmacro pandoric-recode (vars box new)
+;;   `(with-pandoric (this ,@vars) ,box
+;;                   (setq this ,new)))
+
+;; (pandoric-recode (acc) #'pandoric-test
+;;                  (lambda (n)
+;;                    (decf acc (/ n 2))))
+
+;; (pandoric-test 2)
+;; ;; the same now
+;; (with-pandoric (acc) #'pandoric-test
+;;                acc)
