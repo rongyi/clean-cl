@@ -773,3 +773,17 @@
               (car bs))
              (t (error "Bad let bindings")))
        (let-binding-transform (cdr bs)))))
+
+(defmacro sublet (bindings% &rest body)
+  (let ((bindings (let-binding-transform bindings%)))
+    (setq bindings
+          (mapcar (lambda (x)
+                    (cons (gensym (symbol-name (car x))) x))
+                  bindings))
+    `(let (,@(mapcar #'list
+                     (mapcar #'car bindings)
+                     (mapcar #'caddr bindings)))
+       ,@(tree-leaves
+          body
+          #1=(member x bindings :key #'cadr)
+          (caar #1#)))))
