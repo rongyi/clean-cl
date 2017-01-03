@@ -846,3 +846,9 @@
 ;; (get-pandoric #'pandoric-test 'acc)
 ;; (setf (get-pandoric #'pandoric-test 'acc) -1000)
 ;; (pandoric-test 3)
+
+(defmacro! with-pandoric (syms o!box &rest body)
+  `(symbol-macrolet
+       (,@(mapcar #`(,a1 (get-pandoric ,g!box ',a1))
+                  syms))
+     ,@body))
