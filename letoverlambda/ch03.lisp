@@ -956,3 +956,5 @@
 ;;   (pandoric-eval (x)
 ;;                  '(incf x))
 ;;   x)
+
+;; Finish ch06
