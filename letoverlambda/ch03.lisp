@@ -918,3 +918,23 @@
            (incf sum-of-square (expt n 2))
            (incf sum n)
            (incf count)))
+
+(defmacro defpan (name args &rest body)
+  `(defun ,name (self)
+     ,(if args
+          `(with-pandoric ,args self ,@body)
+          `(progn ,@body))))
+
+(defpan stats-counter-mean (sum count)
+  (/ sum count))
+
+(defpan stats-counter-variance (sum-of-square sum count)
+  (if (< count 2)
+      0
+      (/ (- sum-of-square
+            (* sum
+               (stats-counter-mean self)))
+         (- count 1))))
+
+(defpan stats-counter-stddev ()
+  (sqrt (stats-counter-variance self)))
