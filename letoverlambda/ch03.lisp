@@ -938,3 +938,21 @@
 
 (defpan stats-counter-stddev ()
   (sqrt (stats-counter-variance self)))
+
+(defvar pandoric-eval-tunnel)
+
+(defmacro pandoric-eval (vars expr)
+  `(let ((pandoric-eval-tunnel
+          (plambda () ,vars t)))
+     (eval `(with-pandoric
+                ,',vars pandoric-eval-tunnel
+                ,,expr))))
+
+;; (let ((x 1))
+;;   (pandoric-eval (x)
+;;                  '(+ 1 x)))
+
+;; (let ((x 1))
+;;   (pandoric-eval (x)
+;;                  '(incf x))
+;;   x)
