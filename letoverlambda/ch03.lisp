@@ -912,3 +912,9 @@
 ;;   (with-pandoric (a b) #'pantest
 ;;                  (format t "a=~a, b=~a~%" a b)))
 ;; (pantest-peek)
+
+(defun make-stats-counter (&key (count 0) (sum 0) (sum-of-square 0))
+  (plambda (n) (sum count sum-of-square)
+           (incf sum-of-square (expt n 2))
+           (incf sum n)
+           (incf count)))
